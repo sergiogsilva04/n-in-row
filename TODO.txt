@@ -1,0 +1,11 @@
+[Sérgio]
+GameBoard - Lines, Columns
+Slot - X, Y, Player
+
+[Francisco]
+Player - Name, Color, Symbol, Victories, Draws, Loses, TotalGamesPlayed()
+PlayerController - PlayerList, AddPlayer(), RemovePlayer()
+
+[Ricardo]
+Game - VictoryLength, Board, StartGame(), GameDetails(), Forfeit(), Play(), ShowGameBoard()
+GameController - GameHistory
