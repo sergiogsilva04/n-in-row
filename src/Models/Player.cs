@@ -2,7 +2,7 @@
    
     internal class Player {
     
-        private string _name;
+        public string Name { get; private set; }
         private int _victories;
         private int _symbol;
         private int _color;
@@ -10,11 +10,7 @@
         private int _draws;
         private int _loses;
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; } 
-        }
+ 
 
         public int Color
         {
