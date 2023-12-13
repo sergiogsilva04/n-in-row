@@ -1,9 +1,9 @@
-[Sérgio]
+[Sï¿½rgio]
 GameBoard - Lines, Columns
 Slot - X, Y, Player
 
 [Francisco]
-Player - Name, Color, Symbol, Victories, Draws, Loses, TotalGamesPlayed()
+Player - !Name, !Color, !Symbol, !Victories, !Draws, !Loses, !TotalGamesPlayed()
 PlayerController - PlayerList, AddPlayer(), RemovePlayer()
 
 [Ricardo]
