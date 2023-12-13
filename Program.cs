@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using n_in_row.src.Models;
+using System.Text;
 
 namespace n_in_row {
     class Program {
