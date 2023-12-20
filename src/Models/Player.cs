@@ -10,6 +10,6 @@
         public int TotalGamesPlayed()
         {
             return Victories + Draws + Loses;
-        }    
+        }
     }
 }
