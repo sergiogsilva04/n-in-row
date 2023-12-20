@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using n_in_row.src.Models;
 
 namespace n_in_row.src.Controllers
 {
-    internal class PlayerController
-    {
-        private List<Player> _playerList;
-
-        public PlayerController()
-        {
-            _playerList = new List<Player>();
-        }
-
-        public List<Player> PlayerList
-        {
-            get { return _playerList; }
-        }
+    internal class PlayerController() {
+        public List<Player> PlayerList { get; private set; } = [];
 
         public void AddPlayer(Player player)
         {
             if (player != null)
             {
-                _playerList.Add(player);
+                PlayerList.Add(player);
                 Console.WriteLine($"Player {player.Name} added to the list.");
             }
             else
@@ -32,9 +20,9 @@ namespace n_in_row.src.Controllers
 
         public void RemovePlayer(Player player)
         {
-            if (_playerList.Contains(player))
+            if (PlayerList.Contains(player))
             {
-                _playerList.Remove(player);
+                PlayerList.Remove(player);
                 Console.WriteLine($"Player {player.Name} removed from the list.");
             }
             else

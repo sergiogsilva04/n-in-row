@@ -1,28 +1,15 @@
 ﻿namespace n_in_row.src.Models {
-   
-    internal class Player {
-    
-        public string Name { get; private set; }
-        private int Symbol { get; private set; }
-        private int Color { get; private set; }
-        private int Victories { get; private set; }
-        private int Draws { get; private set; }
-        private int Loses { get; private set; }
+    internal class Player(string name, string symbol, string color) {
+        public string Name { get; private set; } = name;
+        public string Symbol { get; private set; } = symbol;
+        public string Color { get; private set; } = color;
+        public int Victories { get; private set; } = 0;
+        public int Draws { get; private set; } = 0;
+        public int Loses { get; private set; } = 0;
 
-        public Player(string name, string symbol, string color)
-        {
-           Name = name;
-           Symbol = symbol;
-           Color = color;
-           Victories = 0;
-           Draws = 0;
-           Loses = 0;
-        }
-        
         public int TotalGamesPlayed()
         {
             return Victories + Draws + Loses;
-        }
-                
+        }    
     }
 }
