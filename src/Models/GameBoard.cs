@@ -2,6 +2,6 @@
     internal class GameBoard(int lines, int columns) {
         public int Lines { get; private set; } = lines;
         public int Columns { get; private set; } = columns;
-        public Player[,] Grid = new Player[lines, columns];
+        private Player[,] Board = new Player[lines, columns];
     }
 }
