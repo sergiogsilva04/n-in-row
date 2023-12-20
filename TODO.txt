@@ -1,11 +1,16 @@
 [S�rgio]
-GameBoard - Lines, Columns
-Slot - X, Y, Player
+GameBoard - Lines, Columns, Board<Player>[Lines, Columns]
+Game - Play()
 
 [Francisco]
 Player - !Name, !Color, !Symbol, !Victories, !Draws, !Loses, !TotalGamesPlayed()
 PlayerController - PlayerList, AddPlayer(), RemovePlayer()
+Game - StartGame()
 
 [Ricardo]
-Game - VictoryLength, Board, StartGame(), GameDetails(), Forfeit(), Play(), ShowGameBoard()
+Game - VictoryLength, Board, Players, GameDetails(), Forfeit(), ShowGameBoard()
 GameController - GameHistory
+
+
+ADD PLAYER ID
+ADD THROW EXCEPTIONS
