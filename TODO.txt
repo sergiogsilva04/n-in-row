@@ -1,10 +1,11 @@
 [Sérgio]
 GameBoard - Lines, Columns, Board<Player>[Lines, Columns]
-GameController - StartGame(), Play()
+Game - StartGame(), Play()
 
 [Francisco]
 Player - Name, Color, Symbol, Victories, Draws, Loses, TotalGamesPlayed()
 PlayerController - PlayerList, AddPlayer(), RemovePlayer()
+Game - StartGame()
 
 [Ricardo]
 Game - VictoryLength, Board, Players[], GameDetails(), Forfeit(), ShowGameBoard()
