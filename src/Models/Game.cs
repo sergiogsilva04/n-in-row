@@ -11,15 +11,19 @@
             this.board = board;
         }
 
+        // TODO: Francisco
         public void StartGame() { }
 
-        public void GameDetails() { }
-
-        public void Forfeit() { }
-
+        // TODO: Sérgio
         public void Play() { }
 
-        public void ShowGameBoard() { }
+        // TODO: Ricardo
+        public void GameDetails() { }
+  
+        // TODO: Ricardo
+        public void Forfeit() { }
 
+        // TODO: Ricardo
+        public void ShowGameBoard() { }
     }
 }
