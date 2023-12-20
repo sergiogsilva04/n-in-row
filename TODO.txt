@@ -8,7 +8,7 @@ PlayerController - PlayerList, AddPlayer(), RemovePlayer()
 Game - StartGame()
 
 [Ricardo]
-Game - VictoryLength, Board, Players[], GameDetails(), Forfeit(), ShowGameBoard()
+Game - VictoryLength, Board, Players, GameDetails(), Forfeit(), ShowGameBoard()
 GameController - GameHistory
 
 
