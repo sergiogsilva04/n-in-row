@@ -6,7 +6,30 @@
         public Player Player2 { get; private set; } = player2;
 
         // TODO: Francisco
-        public void StartGame() { }
+        public void StartGame() {
+            
+         
+            if (Board.IsGameStarted)
+            {
+                Console.WriteLine("Game is already started. Cannot start a new game.");
+                return;
+            }
+
+            string playerName1 = Player1.Name;
+            string playerName2 = Player2.Name;
+
+            string[] sortedPlayerNames = { playerName1, playerName2 };
+            Array.Sort(sortedPlayerNames);
+
+            Console.WriteLine("Players in alphabetical order:");
+            foreach (var playerName in sortedPlayerNames)
+            {
+                Console.WriteLine(playerName);
+            }
+
+        
+            Board.IsGameStarted = true;
+        }
 
         // TODO: Sérgio
         public void Play() { }
