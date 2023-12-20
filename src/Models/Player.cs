@@ -3,59 +3,26 @@
     internal class Player {
     
         public string Name { get; private set; }
-        private int _victories;
-        private int _symbol;
-        private int _color;
-        private int _totalGamesPlayed; 
-        private int _draws;
-        private int _loses;
+        private int Symbol { get; private set; }
+        private int Color { get; private set; }
+        private int Victories { get; private set; }
+        private int Draws { get; private set; }
+        private int Loses { get; private set; }
 
- 
-
-        public int Color
+        public Player(string name, string symbol, string color)
         {
-            get { return _color; }
-            set { _color = value; }
+           Name = name;
+           Symbol = symbol;
+           Color = color;
+           Victories = 0;
+           Draws = 0;
+           Loses = 0;
         }
-
-        public int Symbol
-        {
-            get { return _symbol; }
-            set { _symbol = value; }
-        }
-
-        public int Victories
-        {
-            get { return _victories; }
-            set { _victories = value; }
-        }
-
-        public int TotalGamesPlayed
-        {
-            get { return _totalGamesPlayed; }
-            set { _totalGamesPlayed = value; }
-        }
-
-        public int Draws
-        {
-            get { return _draws; }
-            set { _draws = value; }
-        }
-
-        public int Loses
-        {
-            get { return _loses; }
-            set { _loses = value; }
-        }
-
         
-        public Player(string name)
+        public int TotalGamesPlayed()
         {
-            _name = name;
-            _victories = 0;
-            _totalGamesPlayed = 0; 
-            _draws = 0;
-            _loses = 0;
+            return Victories + Draws + Loses;
         }
+                
     }
 }
