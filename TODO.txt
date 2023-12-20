@@ -1,6 +1,6 @@
 [Sérgio]
 GameBoard - Lines, Columns, Board<Player>[Lines, Columns]
-Game - StartGame(), Play()
+Game - Play()
 
 [Francisco]
 Player - Name, Color, Symbol, Victories, Draws, Loses, TotalGamesPlayed()
