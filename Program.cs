@@ -8,7 +8,7 @@ namespace n_in_row {
 
             Console.WriteLine("Hello, World!");
 
-            //GameBoard gameBoard = new (4, 5);
+            GameBoard gameBoard = new (4, 5);
 
             //gameBoard.ShowBoard();
         }

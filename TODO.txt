@@ -11,3 +11,5 @@ Game - VictoryLength, Board, Players[], GameDetails(), Forfeit(), ShowGameBoard(
 GameController - GameHistory
 
 
+ADD PLAYER ID
+ADD THROW EXCEPTIONS
