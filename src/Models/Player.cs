@@ -11,5 +11,9 @@
         {
             return Victories + Draws + Loses;
         }
+
+        public override string ToString() {
+            return Name;
+        }
     }
 }
