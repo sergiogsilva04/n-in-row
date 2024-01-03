@@ -6,11 +6,11 @@ namespace n_in_row {
         static void Main() {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Game currentGame = new Game(
+            Game currentGame = new(
                 victoryLength: 4,
                 new GameBoard(lines: 4, columns: 4),
-                player1: new Player("Sérgio Silva", "S", "#fff"),
-                player2: new Player("Francisco", "F", "#000")
+                player1: new("Sérgio Silva", "S", "#fff"),
+                player2: new("Francisco", "F", "#000")
             );
 
             do {
