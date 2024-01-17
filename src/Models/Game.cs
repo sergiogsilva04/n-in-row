@@ -138,7 +138,31 @@ namespace n_in_row.src.Models {
         public void GameDetails() { }
 
         // TODO: Ricardo
-        public void Forfeit() { }
+        public void Forfeit()
+        {
+            if (IsGameFinished)
+            {
+                Console.WriteLine("O jogo acabou, a reiniciar");
+
+                // Reset
+                Board.ClearGrid();
+                CurrentPlayer = Player1;
+                IsGameFinished = false;
+
+                Console.WriteLine("Pronto para começar novo jogo");
+            }
+            else
+            {
+                Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
+
+                // Reset
+                Board.ClearGrid();
+                CurrentPlayer = Player1;
+                IsGameFinished = true;
+
+                Console.WriteLine("Pronto para começar novo jogo");
+            }
+        }
 
         // TODO: Sérgio
         private void ShowGameBoard() {
