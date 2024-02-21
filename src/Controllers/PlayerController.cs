@@ -3,31 +3,26 @@
 namespace n_in_row.src.Controllers
 {
     internal class PlayerController() {
-        public List<Player> PlayerList { get; private set; } = [];
+        public Dictionary<string, Player> PlayerDictionary { get; private set; } = [];
 
-        public void AddPlayer(Player player)
-        {
-            if (player != null)
-            {
-                PlayerList.Add(player);
-                Console.WriteLine($"Player {player.Name} added to the list.");
+        public void AddPlayer(Player player) {
+            if (!PlayerDictionary.ContainsKey(player.Name)) {
+                Console.WriteLine($"Player '{player.Name}' is already in the dictionary.");
+
+                return;
             }
-            else
-            {
-                Console.WriteLine("Cannot add a null player to the list.");
-            }
+
+            PlayerDictionary.Add(player.Name, player);
+
+            Console.WriteLine($"Player {player.Name} added to the dictionary.");
         }
 
-        public void RemovePlayer(Player player)
-        {
-            if (PlayerList.Contains(player))
-            {
-                PlayerList.Remove(player);
-                Console.WriteLine($"Player {player.Name} removed from the list.");
-            }
-            else
-            {
-                Console.WriteLine($"Player {player.Name} not found in the list.");
+        public void RemovePlayer(Player player) {
+            if (PlayerDictionary.ContainsKey(player.Name)) {
+                PlayerDictionary.Remove(player.Name);
+                Console.WriteLine($"Player {player.Name} removed from the dictionary.");
+            } else {
+                Console.WriteLine($"Player {player.Name} not found in the dictionary.");
             }
         }
     }
