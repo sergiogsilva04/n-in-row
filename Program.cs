@@ -1,4 +1,5 @@
-﻿using n_in_row.src.Models;
+﻿using n_in_row.src.Controllers;
+using n_in_row.src.Models;
 using System.Text;
 
 namespace n_in_row {
@@ -6,15 +7,42 @@ namespace n_in_row {
         static void Main() {
             Console.OutputEncoding = Encoding.UTF8;
 
+            PlayerController playerController = new PlayerController();
+
+            Player player1 = new("Sérgio Silva", "S", "#fff");
+            Player player2 = new("Francisco", "F", "#000");
+
+            playerController.AddPlayer(player1);
+            playerController.AddPlayer(player2);
+
+            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 3));
+            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 5));
+            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 1));
+
             Game currentGame = new(
                 victoryLength: 4,
-                new GameBoard(lines: 4, columns: 4),
-                player1: new("Sérgio Silva", "S", "#fff"),
-                player2: new("Francisco", "F", "#000")
+                new GameBoard(lines: 5, columns: 5),
+                player1: player1,
+                player2: player2
             );
+
+            SpecialPiece? selectedSpecialPiece = null;
 
             do {
                 Console.WriteLine($"É a vez do jogador: {currentGame.CurrentPlayer.Name}");
+
+                Console.Write("Vai user peça especial? (s/n): ");
+
+                List<SpecialPiece> currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
+
+                if (Console.ReadLine() == "s") {
+                    Array.ForEach(currentPlayerSpecialPieces.ToArray(), Console.WriteLine);
+
+                    Console.Write($"Qual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
+
+                    selectedSpecialPiece = currentPlayerSpecialPieces[int.Parse(Console.ReadLine()!) - 1];
+                }
+
                 Console.Write("Qual é a coluna que vai colocar a peça? ");
                 int column = int.Parse(Console.ReadLine()!);
 
@@ -25,7 +53,7 @@ namespace n_in_row {
                     column = int.Parse(Console.ReadLine()!);
                 }
 
-                currentGame.Play(column - 1);
+                currentGame.Play(column - 1, selectedSpecialPiece);
 
                 Console.WriteLine();
 

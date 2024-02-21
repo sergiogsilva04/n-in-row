@@ -5,17 +5,18 @@ namespace n_in_row.src.Controllers
     internal class PlayerController() {
         public List<Player> PlayerList { get; private set; } = [];
 
-        public void AddPlayer(Player player)
+        public void AddPlayer(Player newPlayer)
         {
-            if (player != null)
+            if (PlayerList.Contains(newPlayer))
             {
-                PlayerList.Add(player);
-                Console.WriteLine($"Player {player.Name} added to the list.");
+                Console.WriteLine("The player is already in the list");
+
+                return;
             }
-            else
-            {
-                Console.WriteLine("Cannot add a null player to the list.");
-            }
+
+            PlayerList.Add(newPlayer);
+
+            Console.WriteLine($"Player {newPlayer} added to the list.");
         }
 
         public void RemovePlayer(Player player)

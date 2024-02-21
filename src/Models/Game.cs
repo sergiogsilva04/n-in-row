@@ -12,13 +12,26 @@ namespace n_in_row.src.Models {
         public void StartGame() { }
 
         // TODO: Sérgio
-        public void Play(int column) {
+        public void Play(int column, SpecialPiece? specialPiece) {
             for (int i = 0; i < Board.Lines; i++) {
                 if (Board.Grid[Board.Lines - 1, column] != null) {
                     Console.WriteLine("Coluna completa.");
 
                     return;
                 }
+
+                if (specialPiece != null) {
+                    for (int j = 0; j < specialPiece.Length; j++) {
+                        Board.Grid[i, j] = CurrentPlayer;
+                    }
+
+                    Console.WriteLine("Peça colocada.");
+
+                    ShowGameBoard();
+
+                    return;
+                }
+
 
                 if (Board.Grid[i, column] == null) {
                     Board.Grid[i, column] = CurrentPlayer;
@@ -116,6 +129,11 @@ namespace n_in_row.src.Models {
 
         // TODO: Ricardo
         public void Forfeit() { }
+
+        // TODO: Sérgio
+        public void CreateSpecialPiece() {
+
+        }
 
         // TODO: Sérgio
         private void ShowGameBoard() {

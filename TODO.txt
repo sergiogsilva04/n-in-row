@@ -14,3 +14,5 @@ GameController - GameHistory
 
 ADD PLAYER ID
 ADD THROW EXCEPTIONS
+
+peça especial, fazer um controller que pede o tamanho da peça
