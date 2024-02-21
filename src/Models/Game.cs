@@ -6,19 +6,13 @@ namespace n_in_row.src.Models {
         public Player Player1 { get; private set; } = player1;
         public Player Player2 { get; private set; } = player2;
         public Player CurrentPlayer { get; private set; } = player1;
-        public bool IsGameFinished { get; private set; } = false;
-
-        public Game(int victoryLength, GameBoard board)
-        {
-            VictoryLength = victoryLength;
-            this.Board = board;
-        }
+        public bool IsGameOnGoing { get; private set; } = false;
 
         // TODO: Francisco
         public void StartGame() {
             
          
-            if (Board.IsGameStarted)
+            if (IsGameOnGoing)
             {
                 Console.WriteLine("Game is already started. Cannot start a new game.");
                 return;
@@ -36,8 +30,8 @@ namespace n_in_row.src.Models {
                 Console.WriteLine(playerName);
             }
 
-        
-            Board.IsGameStarted = true;
+
+            IsGameOnGoing= true;
         }
 
         // TODO: Sérgio
@@ -77,7 +71,7 @@ namespace n_in_row.src.Models {
                         return;
                     }
 
-                    IsGameFinished = true;
+                    IsGameOnGoing = true;
 
                     if (gameStatus.Name == "draw") {
                         Console.Write("\nJogo empatado!");
@@ -150,7 +144,7 @@ namespace n_in_row.src.Models {
                 }
             }
 
-            return new Player("draw", "", "");
+            return new Player("draw", "");
         }
 
         // TODO: Ricardo
@@ -159,14 +153,14 @@ namespace n_in_row.src.Models {
         // TODO: Ricardo
         public void Forfeit()
         {
-            if (IsGameFinished)
+            if (IsGameOnGoing)
             {
                 Console.WriteLine("O jogo acabou, a reiniciar");
 
-                // Reset
+               /* // Reset
                 Board.ClearGrid();
                 CurrentPlayer = Player1;
-                IsGameFinished = false;
+                IsGameOnGoing = false*/;
 
                 Console.WriteLine("Pronto para começar novo jogo");
             }
@@ -174,27 +168,13 @@ namespace n_in_row.src.Models {
             {
                 Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
 
-                // Reset
+               /* // Reset
                 Board.ClearGrid();
                 CurrentPlayer = Player1;
-                IsGameFinished = true;
+                IsGameOnGoing = true;*/
 
                 Console.WriteLine("Pronto para começar novo jogo");
             }
-        }
-
-        // TODO: Sérgio
-        private void ShowGameBoard() {
-            Console.WriteLine();
-
-            for (int i = Board.Lines; i > 0; i--) {
-                for (int j = 0; j < Board.Columns; j++) {
-                    Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
-                }
-
-        // TODO: Sérgio
-        public void CreateSpecialPiece() {
-
         }
 
         // TODO: Sérgio

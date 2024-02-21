@@ -57,7 +57,7 @@ namespace n_in_row {
 
                 Console.WriteLine();
 
-            } while (!currentGame.IsGameFinished);
+            } while (!currentGame.IsGameOnGoing);
         }
     }
 }
