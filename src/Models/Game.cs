@@ -8,6 +8,12 @@ namespace n_in_row.src.Models {
         public Player CurrentPlayer { get; private set; } = player1;
         public bool IsGameFinished { get; private set; } = false;
 
+        public Game(int victoryLength, GameBoard board)
+        {
+            VictoryLength = victoryLength;
+            this.Board = board;
+        }
+
         // TODO: Francisco
         public void StartGame() {
             
@@ -151,7 +157,44 @@ namespace n_in_row.src.Models {
         public void GameDetails() { }
 
         // TODO: Ricardo
-        public void Forfeit() { }
+        public void Forfeit()
+        {
+            if (IsGameFinished)
+            {
+                Console.WriteLine("O jogo acabou, a reiniciar");
+
+                // Reset
+                Board.ClearGrid();
+                CurrentPlayer = Player1;
+                IsGameFinished = false;
+
+                Console.WriteLine("Pronto para começar novo jogo");
+            }
+            else
+            {
+                Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
+
+                // Reset
+                Board.ClearGrid();
+                CurrentPlayer = Player1;
+                IsGameFinished = true;
+
+                Console.WriteLine("Pronto para começar novo jogo");
+            }
+        }
+    }
+
+    // TODO: Sérgio
+    private void ShowGameBoard()
+    {
+        Console.WriteLine();
+
+        for (int i = Board.Lines; i > 0; i--)
+        {
+            for (int j = 0; j < Board.Columns; j++)
+            {
+                Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
+            }
 
         // TODO: Sérgio
         public void CreateSpecialPiece() {
