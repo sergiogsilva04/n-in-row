@@ -182,19 +182,15 @@ namespace n_in_row.src.Models {
                 Console.WriteLine("Pronto para começar novo jogo");
             }
         }
-    }
 
-    // TODO: Sérgio
-    private void ShowGameBoard()
-    {
-        Console.WriteLine();
+        // TODO: Sérgio
+        private void ShowGameBoard() {
+            Console.WriteLine();
 
-        for (int i = Board.Lines; i > 0; i--)
-        {
-            for (int j = 0; j < Board.Columns; j++)
-            {
-                Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
-            }
+            for (int i = Board.Lines; i > 0; i--) {
+                for (int j = 0; j < Board.Columns; j++) {
+                    Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
+                }
 
         // TODO: Sérgio
         public void CreateSpecialPiece() {
