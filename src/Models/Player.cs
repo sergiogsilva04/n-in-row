@@ -1,8 +1,7 @@
 ﻿namespace n_in_row.src.Models {
-    internal class Player(string name, string symbol, string color) : IEquatable<Player> {
+    internal class Player(string name, string symbol) : IEquatable<Player> {
         public string Name { get; private set; } = name;
         public string Symbol { get; private set; } = symbol;
-        public string Color { get; private set; } = color;
         public List<SpecialPiece> SpecialPieces { get; private set; } = [];
         public int Victories { get; private set; } = 0;
         public int Draws { get; private set; } = 0;

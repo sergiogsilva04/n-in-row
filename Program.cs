@@ -7,17 +7,17 @@ namespace n_in_row {
         static void Main() {
             Console.OutputEncoding = Encoding.UTF8;
 
-            PlayerController playerController = new PlayerController();
+            PlayerController playerController = new();
 
-            Player player1 = new("Sérgio Silva", "S", "#fff");
-            Player player2 = new("Francisco", "F", "#000");
+            Player player1 = new("Sérgio Silva", "S");
+            Player player2 = new("Francisco", "F");
 
             playerController.AddPlayer(player1);
             playerController.AddPlayer(player2);
 
-            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 3));
-            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 5));
-            player1.AddSpecialPiece(new SpecialPiece("Horizontal", 1));
+            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 3));
+            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 5));
+            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 1));
 
             Game currentGame = new(
                 victoryLength: 4,
