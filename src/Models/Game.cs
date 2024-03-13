@@ -6,7 +6,27 @@ namespace n_in_row.src.Models {
         public Player Player1 { get; private set; } = player1;
         public Player Player2 { get; private set; } = player2;
         public Player CurrentPlayer { get; private set; } = player1;
-        public bool IsGameOnGoing { get; private set; } = false;
+        public bool IsGameOnGoing { get; private set; } = true;
+
+        //public void RegisterPlayer() {
+        //    Console.Write("Digite o nome do jogador: ");
+        //    string playerName = Console.ReadLine().ToLower();
+
+        //    if (Players.ContainsKey(playerName)) {
+        //        Console.WriteLine("Este jogador já está registrado.");
+        //    } else {
+        //        Console.Write("Digite o símbolo do jogador: ");
+        //        string playerSymbol = Console.ReadKey().KeyChar.ToString();
+
+        //        Player newPlayer = new Player(playerName, playerSymbol);
+
+        //        Players.Add(playerName, newPlayer);
+
+        //        PlayersInGame.Add(playerName);
+
+        //        Console.WriteLine($"\nJogador {playerName} registrado com sucesso!");
+        //    }
+        //}
 
         // TODO: Francisco
         public void StartGame() {
@@ -14,7 +34,7 @@ namespace n_in_row.src.Models {
          
             if (IsGameOnGoing)
             {
-                Console.WriteLine("Game is already started. Cannot start a new game.");
+                Console.WriteLine("O jogo já começou. Não é possível iniciar um novo jogo.");
                 return;
             }
 
@@ -43,21 +63,17 @@ namespace n_in_row.src.Models {
                     return;
                 }
 
-                if (specialPiece != null) {
-                    for (int j = 0; j < specialPiece.Length; j++) {
-                        Board.Grid[i, j] = CurrentPlayer;
-                    }
-
-                    Console.WriteLine("Peça colocada.");
-
-                    ShowGameBoard();
-
-                    return;
-                }
-
-
                 if (Board.Grid[i, column] == null) {
                     Board.Grid[i, column] = CurrentPlayer;
+
+/*                    if (specialPiece == null) {
+                        Board.Grid[i, column] = CurrentPlayer;
+   
+                    } else {
+                        for (int j = 0; j < specialPiece.Length; j++) {
+                            Board.Grid[i, j] = CurrentPlayer;
+                        }
+                    }*/
 
                     CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
 
@@ -71,7 +87,7 @@ namespace n_in_row.src.Models {
                         return;
                     }
 
-                    IsGameOnGoing = true;
+                    IsGameOnGoing = false;
 
                     if (gameStatus.Name == "draw") {
                         Console.Write("\nJogo empatado!");
@@ -80,7 +96,6 @@ namespace n_in_row.src.Models {
                     }
 
                     Console.Write($"\nJogo terminado, venceu: {gameStatus.Name}");
-
 
                     return;
                 }

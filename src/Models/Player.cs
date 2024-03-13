@@ -5,10 +5,18 @@
         public List<SpecialPiece> SpecialPieces { get; private set; } = [];
         public int Victories { get; private set; } = 0;
         public int Draws { get; private set; } = 0;
-        public int Loses { get; private set; } = 0;
+        public int Defeats { get; private set; } = 0;
 
         public int TotalGamesPlayed() {
-            return Victories + Draws + Loses;
+            return Victories + Draws + Defeats;
+        }
+
+        public double GetStatistic(int statistic) {
+            if (TotalGamesPlayed() <= 0) {
+                return 0;
+            }
+
+            return statistic / TotalGamesPlayed();
         }
 
         public void AddSpecialPiece(SpecialPiece specialPiece) {
