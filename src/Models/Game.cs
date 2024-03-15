@@ -1,64 +1,103 @@
 ﻿
+using n_in_row.src.Controllers;
+
 namespace n_in_row.src.Models {
-    internal class Game(int victoryLength, GameBoard board, Player player1, Player player2) {
-        public int VictoryLength { get; private set; } = victoryLength;
+    internal class Game(Queue<Player> players, GameBoard board) {
+        public Queue<Player> Players { get; private set; } = players;
         public GameBoard Board { get; private set; } = board;
-        public Player Player1 { get; private set; } = player1;
-        public Player Player2 { get; private set; } = player2;
-        public Player CurrentPlayer { get; private set; } = player1;
+        public Player CurrentPlayer { get; private set; } = players.First();
         public bool IsGameOnGoing { get; private set; } = true;
 
-        //public void RegisterPlayer() {
-        //    Console.Write("Digite o nome do jogador: ");
-        //    string playerName = Console.ReadLine().ToLower();
+        public static Game? StartGame(PlayerController playerController, Game? currentGame) {
+            Queue<Player> players = new();
 
-        //    if (Players.ContainsKey(playerName)) {
-        //        Console.WriteLine("Este jogador já está registrado.");
-        //    } else {
-        //        Console.Write("Digite o símbolo do jogador: ");
-        //        string playerSymbol = Console.ReadKey().KeyChar.ToString();
+            Console.WriteLine();
 
-        //        Player newPlayer = new Player(playerName, playerSymbol);
+            for (int i = 0; i < Constants.MAX_PLAYING_PLAYERS; i++) {
+                Console.Write($"Digite o nome do {i + 1}º jogador: ");
+                string name = Console.ReadLine() ?? "";
 
-        //        Players.Add(playerName, newPlayer);
+                while (string.IsNullOrWhiteSpace(name)) {
+                    Console.WriteLine($"\nO nome '{name}' é inválido.");
 
-        //        PlayersInGame.Add(playerName);
+                    Console.Write($"Digite o nome do {i + 1}º jogador: ");
+                    name = Console.ReadLine() ?? "";
+                }
 
-        //        Console.WriteLine($"\nJogador {playerName} registrado com sucesso!");
-        //    }
-        //}
+                if (!playerController.HasPlayer(name)) {
+                    Console.WriteLine($"\nO jogador '{name}' não está registado.");
 
-        // TODO: Francisco
-        public void StartGame() {
-            
-         
-            if (IsGameOnGoing)
-            {
-                Console.WriteLine("O jogo já começou. Não é possível iniciar um novo jogo.");
-                return;
+                    return null;
+                }
+
+                if (players.Where((player) => player.Name == name).Any()) {
+                    Console.WriteLine($"\nO jogador '{name}' já foi adicionado a este jogo.");
+
+                    return null;
+                }
+
+                Player playerToAdd = playerController.GetPlayer(name);
+
+                if (players.Where((player) => player.Symbol == playerToAdd.Symbol).Any()) {
+                    Console.WriteLine($"\nJá existe um jogador adicionado com o símbolo [{playerToAdd.Symbol}].");
+
+                    return null;
+                }
+
+                players.Enqueue(playerController.GetPlayer(name));
             }
 
-            string playerName1 = Player1.Name;
-            string playerName2 = Player2.Name;
+            Console.Write("Qual o comprimento do jogo? ");
+            int columns = int.Parse(Console.ReadLine()!);
 
-            string[] sortedPlayerNames = { playerName1, playerName2 };
-            Array.Sort(sortedPlayerNames);
+            while (string.IsNullOrWhiteSpace(columns.ToString()) || columns < Constants.MIN_BOARD_COLUMNS) {
+                Console.WriteLine($"\nComprimento inválido. Tem que ter um número mínimo de {Constants.MIN_BOARD_COLUMNS} {(Constants.MIN_BOARD_COLUMNS == 1 ? "coluna" : "colunas")}.");
 
-            Console.WriteLine("Players in alphabetical order:");
-            foreach (var playerName in sortedPlayerNames)
-            {
-                Console.WriteLine(playerName);
+                Console.Write("Qual o comprimento do jogo? ");
+                columns = int.Parse(Console.ReadLine()!);
             }
 
+            Console.Write("Qual a altura do jogo? ");
+            int rows = int.Parse(Console.ReadLine()!);
 
-            IsGameOnGoing= true;
+            while (string.IsNullOrWhiteSpace(rows.ToString()) || rows < Constants.MIN_BOARD_ROWS) {
+                Console.WriteLine($"Altura inválida. Tem que ter um número mínimo de {Constants.MIN_BOARD_ROWS} {(Constants.MIN_BOARD_ROWS == 1 ? "linha" : "linhas")}.");
+
+                Console.Write("Qual a altura do jogo? ");
+                rows = int.Parse(Console.ReadLine()!);
+            }
+
+            Console.Write("Qual é o tamanho da sequência vencedora? ");
+            int victoryLength = int.Parse(Console.ReadLine()!);
+
+            while (string.IsNullOrWhiteSpace(victoryLength.ToString()) || victoryLength < Constants.MIN_VICTORY_LENGTH || victoryLength > rows || victoryLength > columns) {
+                Console.WriteLine($"\nTamanho inválido. Tem que ser um número mínimo de {Constants.MIN_VICTORY_LENGTH} e não pode exceder o comprimento ({columns}) e a altura ({rows}).");
+
+                Console.Write("\nQual é o tamanho da sequência vencedora? ");
+                victoryLength = int.Parse(Console.ReadLine()!);
+            }
+
+            Console.WriteLine($"\nJogo iniciado com sucesso entre os jogadores:\n");
+
+            List<Player> playerList = [..players];
+            playerList = [.. playerList.OrderBy(player => player.Name)];
+
+            Array.ForEach(playerList.ToArray(), (player) => Console.WriteLine($"{player}"));
+
+            // TODO: FAZER PEÇAS ESPECIAIS
+
+            Console.WriteLine($"\nBoa sorte, e o mais importante é... DIVIRTAM-SE!");
+
+            return new(
+                players: players,
+                new GameBoard(rows: rows, columns: columns, victoryLength: victoryLength)
+            );
         }
 
-        // TODO: Sérgio
         public void Play(int column, SpecialPiece? specialPiece) {
-            for (int i = 0; i < Board.Lines; i++) {
-                if (Board.Grid[Board.Lines - 1, column] != null) {
-                    Console.WriteLine("Coluna completa.");
+            for (int i = 0; i < Board.Rows; i++) {
+                if (Board.Grid[Board.Rows - 1, column] != null) {
+                    Console.WriteLine("\nColuna completa.");
 
                     return;
                 }
@@ -66,36 +105,44 @@ namespace n_in_row.src.Models {
                 if (Board.Grid[i, column] == null) {
                     Board.Grid[i, column] = CurrentPlayer;
 
-/*                    if (specialPiece == null) {
-                        Board.Grid[i, column] = CurrentPlayer;
-   
-                    } else {
-                        for (int j = 0; j < specialPiece.Length; j++) {
-                            Board.Grid[i, j] = CurrentPlayer;
-                        }
-                    }*/
+                    /*                    if (specialPiece == null) {
+                                            Board.Grid[i, column] = CurrentPlayer;
 
-                    CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
+                                        } else {
+                                            for (int j = 0; j < specialPiece.Length; j++) {
+                                                Board.Grid[i, j] = CurrentPlayer;
+                                            }
+                                        }*/
+                    ;
 
-                    Console.WriteLine("Peça colocada.");
+                    Console.WriteLine("\nPeça colocada.");
 
                     ShowGameBoard();
 
                     Player? gameStatus = CheckGameStatus();
 
                     if (gameStatus == null) {
+                        Players.Enqueue(Players.Dequeue());
+                        CurrentPlayer = Players.Peek();
+
                         return;
                     }
 
                     IsGameOnGoing = false;
 
                     if (gameStatus.Name == "draw") {
+                        Players.ToList().ForEach((player) => player.SetStatistics(StatisticType.Draw));
+
                         Console.Write("\nJogo empatado!");
 
                         return;
                     }
 
-                    Console.Write($"\nJogo terminado, venceu: {gameStatus.Name}");
+                    CurrentPlayer.SetStatistics(StatisticType.Victory);
+
+                    Players.Where((player) => player.Name != CurrentPlayer.Name).ToList().ForEach((player) => player.SetStatistics(StatisticType.Defeat));
+
+                    Console.WriteLine($"\nJogo terminado, venceu: {gameStatus}");
 
                     return;
                 }
@@ -103,55 +150,83 @@ namespace n_in_row.src.Models {
         }
 
         private Player? CheckGameStatus() {
-            for (var row = 3; row < Board.Lines; row++) {
+            int victoryLength = Board.VictoryLength;
+
+            for (var row = victoryLength - 1; row < Board.Rows; row++) {
                 for (var column = 0; column < Board.Columns; column++) {
                     if (Board.Grid[row, column] != null) {
-                        if (Board.Grid[row, column] == Board.Grid[row - 1, column] &&
-                            Board.Grid[row, column] == Board.Grid[row - 2, column] &&
-                            Board.Grid[row, column] == Board.Grid[row - 3, column]) {
-                            return Board.Grid[row, column];
+                        // Vertical
+                        if (row - victoryLength + 1 >= 0) {
+                            bool isVictory = true;
+
+                            for (var i = 1; i < victoryLength; i++) {
+                                if (Board.Grid[row, column] != Board.Grid[row - i, column]) {
+                                    isVictory = false;
+
+                                    break;
+                                }
+                            }
+
+                            if (isVictory) {
+                                return Board.Grid[row, column];
+                            }
+                        }
+
+                        // Horizontal
+                        if (column + victoryLength <= Board.Columns) {
+                            bool isVictory = true;
+
+                            for (var i = 1; i < victoryLength; i++) {
+                                if (Board.Grid[row, column] != Board.Grid[row, column + i]) {
+                                    isVictory = false;
+
+                                    break;
+                                }
+                            }
+
+                            if (isVictory) {
+                                return Board.Grid[row, column];
+                            }
+                        }
+
+                        // Diagonal (direita)
+                        if (row - victoryLength + 1 >= 0 && column + victoryLength <= Board.Columns) {
+                            bool isVictory = true;
+
+                            for (var i = 1; i < victoryLength; i++) {
+                                if (Board.Grid[row, column] != Board.Grid[row - i, column + i]) {
+                                    isVictory = false;
+
+                                    break;
+                                }
+                            }
+
+                            if (isVictory) {
+                                return Board.Grid[row, column];
+                            }
+                        }
+
+                        // Diagonal (esquerda)
+                        if (row - victoryLength + 1 >= 0 && column - victoryLength + 1 >= 0) {
+                            bool isVictory = true;
+
+                            for (var i = 1; i < victoryLength; i++) {
+                                if (Board.Grid[row, column] != Board.Grid[row - i, column - i]) {
+                                    isVictory = false;
+
+                                    break;
+                                }
+                            }
+
+                            if (isVictory) {
+                                return Board.Grid[row, column];
+                            }
                         }
                     }
                 }
             }
 
-            for (var row = 0; row < Board.Lines; row++) {
-                for (var column = 0; column < Board.Columns - 3; column++) {
-                    if (Board.Grid[row, column] != null) {
-                        if (Board.Grid[row, column] == Board.Grid[row, column + 1] &&
-                            Board.Grid[row, column] == Board.Grid[row, column + 2] &&
-                            Board.Grid[row, column] == Board.Grid[row, column + 3]) {
-                            return Board.Grid[row, column];
-                        }
-                    }
-                }
-            }
-
-            for (var row = 3; row < Board.Lines - 3; row++) {
-                for (var column = 0; column < Board.Columns - 3; column++) {
-                    if (Board.Grid[row, column] != null) {
-                        if (Board.Grid[row, column] == Board.Grid[row - 1, column + 1] &&
-                            Board.Grid[row, column] == Board.Grid[row - 2, column + 2] &&
-                            Board.Grid[row, column] == Board.Grid[row - 3, column + 3]) {
-                            return Board.Grid[row, column];
-                        }
-                    }
-                }
-            }
-
-            for (var row = 3; row < Board.Lines; row++) {
-                for (var column = 3; column < Board.Columns; column++) {
-                    if (Board.Grid[row, column] != null) {
-                        if (Board.Grid[row, column] == Board.Grid[row - 1, column - 1] &&
-                            Board.Grid[row, column] == Board.Grid[row - 2, column - 1] &&
-                            Board.Grid[row, column] == Board.Grid[row - 3, column - 1]) {
-                            return Board.Grid[row, column];
-                        }
-                    }
-                }
-            }
-
-            for (var row = 0; row < Board.Lines; row++) {
+            for (var row = 0; row < Board.Rows; row++) {
                 for (var column = 0; column < Board.Columns; column++) {
                     if (Board.Grid[row, column] == null) {
                         return null;
@@ -161,6 +236,7 @@ namespace n_in_row.src.Models {
 
             return new Player("draw", "");
         }
+
 
         // TODO: Ricardo
         public void GameDetails() { }
@@ -196,13 +272,17 @@ namespace n_in_row.src.Models {
         private void ShowGameBoard() {
             Console.WriteLine();
 
-            for (int i = Board.Lines; i > 0; i--) {
+            for (int i = Board.Rows; i > 0; i--) {
                 for (int j = 0; j < Board.Columns; j++) {
                     Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
                 }
 
                 Console.WriteLine();
             }
+        }
+
+        public bool HasPlayer(string playerName) {
+            return Players.Where((player) => player.Name == playerName.Trim().ToLower()).Any();
         }
     }
 }

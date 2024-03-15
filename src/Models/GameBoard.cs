@@ -1,7 +1,8 @@
 ﻿namespace n_in_row.src.Models {
-    internal class GameBoard(int lines, int columns) {
-        public int Lines { get; private set; } = lines;
+    internal class GameBoard(int rows, int columns, int victoryLength) {
+        public int Rows { get; private set; } = rows;
         public int Columns { get; private set; } = columns;
-        public Player[,] Grid = new Player[lines, columns];
+        public int VictoryLength { get; private set; } = victoryLength;
+        public Player[,] Grid = new Player[rows, columns];
     }
 }
