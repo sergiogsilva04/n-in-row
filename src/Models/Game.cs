@@ -77,6 +77,63 @@ namespace n_in_row.src.Models {
                 victoryLength = int.Parse(Console.ReadLine()!);
             }
 
+            Console.Write("\nAdicionar alguma peça especial? [s/n]: ");
+            bool addSpecialPiece = (Console.ReadLine() ?? "") == "s";
+
+            while (addSpecialPiece) {
+                string direction;
+
+                do {
+                    Console.Write("\nQual é a direção da peça? [esquerda | direita]: ");
+                    direction = (Console.ReadLine() ?? "").Trim().ToLower();
+
+                    if (direction != "esquerda" && direction != "direita") {
+                        Console.WriteLine($"\nDireção inválida. As direções disponíveis são 'esquerda' e 'direita'.");
+
+                        Console.Write("Qual é a direção da peça? ");
+                        direction = (Console.ReadLine() ?? "").Trim().ToLower();
+                    }
+
+                } while (direction != "esquerda" && direction != "direita");
+
+                SpecialPieceDirection specialPieceDirection = direction == "esquerda" ? SpecialPieceDirection.Left : SpecialPieceDirection.Right;
+
+                Console.Write("Qual é o tamanho da peça? ");
+                int specialPieceLength = int.Parse(Console.ReadLine()!);
+
+                while (string.IsNullOrWhiteSpace(specialPieceLength.ToString()) || specialPieceLength > columns) {
+                    Console.WriteLine($"\nTamanho inválido. Tem que ser um número entre 2 e o número de colunas ({columns}).");
+
+                    Console.Write("\nQual é o tamanho da peça? ");
+                    specialPieceLength = int.Parse(Console.ReadLine()!);
+                }
+
+                Console.Write("Qual é a quantidade de peças? ");
+                int specialPieceQuantity = int.Parse(Console.ReadLine()!);
+
+                while (string.IsNullOrWhiteSpace(specialPieceQuantity.ToString()) || specialPieceQuantity < 1) {
+                    Console.WriteLine($"\nQuantidade inválida. Tem que haver pelo menos 1 peça.");
+
+                    Console.Write("Qual é a quantidade de peças? ");
+                    specialPieceQuantity = int.Parse(Console.ReadLine()!);
+                }
+
+                SpecialPiece specialPiece = new(specialPieceDirection, specialPieceLength, specialPieceQuantity);
+                IEnumerable<SpecialPiece> existentSpecialPiece = players.First().SpecialPieces.Where((piece) => piece.Equals(specialPiece));
+
+                if (existentSpecialPiece.Any()) {
+                    existentSpecialPiece.First().AddQuantity(specialPiece.Quantity);
+
+                } else {
+                    Array.ForEach(players.ToArray(), (player) => player.AddSpecialPiece(specialPiece));
+                }
+
+                Console.WriteLine($"\nPeça especial adicionada com sucesso.");
+
+                Console.Write("\nDeseja continuar a adicionar peças? [s/n]: ");
+                addSpecialPiece = (Console.ReadLine() ?? "") == "s";
+            }
+
             Console.WriteLine($"\nJogo iniciado com sucesso entre os jogadores:\n");
 
             List<Player> playerList = [..players];
@@ -84,7 +141,14 @@ namespace n_in_row.src.Models {
 
             Array.ForEach(playerList.ToArray(), (player) => Console.WriteLine($"{player}"));
 
-            // TODO: FAZER PEÇAS ESPECIAIS
+            if (players.First().SpecialPieces.Count > 0) {
+                Console.WriteLine($"\nPeças especiais disponíveis:\n");
+
+                Array.ForEach(players.First().SpecialPieces.ToArray(), (specialPiece) => Console.WriteLine($"{specialPiece}"));
+
+            } else {
+                Console.WriteLine($"\nSem peças especiais disponíveis.");
+            }
 
             Console.WriteLine($"\nBoa sorte, e o mais importante é... DIVIRTAM-SE!");
 
@@ -142,7 +206,7 @@ namespace n_in_row.src.Models {
 
                     Players.Where((player) => player.Name != CurrentPlayer.Name).ToList().ForEach((player) => player.SetStatistics(StatisticType.Defeat));
 
-                    Console.WriteLine($"\nJogo terminado, venceu: {gameStatus}");
+                    Console.WriteLine($"\nJogo terminado, venceu: {gameStatus}.");
 
                     return;
                 }

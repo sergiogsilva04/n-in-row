@@ -5,13 +5,13 @@
         Defeat
     }
 
-    internal class Player(string name, string symbol) : IEquatable<Player> {
+    internal class Player(string name, string symbol) : IEquatable<Object> {
         public string Name { get; private set; } = name;
         public string Symbol { get; private set; } = symbol;
-        public List<SpecialPiece> SpecialPieces { get; private set; } = [];
         public int Victories { get; private set; } = 0;
         public int Draws { get; private set; } = 0;
         public int Defeats { get; private set; } = 0;
+        public List<SpecialPiece> SpecialPieces { get; private set; } = [];
 
         public int TotalGamesPlayed() {
             return Victories + Draws + Defeats;
@@ -52,12 +52,16 @@
             return $"[{Symbol}] '{Name}'";
         }
 
-        public bool Equals(Player? other) {
-            if (other == null) {
+        public override bool Equals(Object? other) {
+            if (other == null || GetType() != other.GetType()) {
                 return false;
             }
 
-            return Name == other.Name;
+            return Name == ((Player)other).Name;
+        }
+
+        public override int GetHashCode() {
+            return Name.GetHashCode();
         }
     }
 }
