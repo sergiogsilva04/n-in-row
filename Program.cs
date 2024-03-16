@@ -114,25 +114,31 @@ namespace n_in_row {
                         bool keepPlaying;
 
                         do {
-                            Console.WriteLine($"\nÉ a vez do jogador: {currentGame.CurrentPlayer}");
+                            Console.WriteLine($"\nÉ a vez do jogador: {currentGame.CurrentPlayer}.");
 
-                            //*currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
+                            List<SpecialPiece> currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
+                            SpecialPiece? selectedSpecialPiece;
 
-                            //if (currentPlayerSpecialPieces.Count > 0) {
-                            //    Console.Write("Utilizar peça especial? (s/n): ");
+                            if (currentPlayerSpecialPieces.Count > 0) {
+                                Console.Write("\nUtilizar peça especial? [s/n]: ");
 
-                            //    if (Console.ReadLine() == "s") {
+                                if (Console.ReadLine() == "s") {
+                                    Console.WriteLine();
 
-                            //        Console.WriteLine();
+                                    for (int i = 0; i < currentPlayerSpecialPieces.Count; i++) {
+                                        Console.WriteLine($"« {i + 1} » {currentPlayerSpecialPieces[i]}");
+                                    }
 
-                            //        Array.ForEach(currentPlayerSpecialPieces.ToArray(), Console.WriteLine);
+                                    Console.Write($"\nQual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
 
-                            //        Console.Write($"\nQual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
+                                    // TODO: VERIFICAR NUMERO SELCIONADO
+                                    selectedSpecialPiece = currentPlayerSpecialPieces[int.Parse(Console.ReadLine()!) - 1];
 
-                            //        selectedSpecialPiece = currentPlayerSpecialPieces[int.Parse(Console.ReadLine()!) - 1];
-                            //    }
-                            //}
+                                    Console.WriteLine($"\nPeça especial selecionada: {selectedSpecialPiece}");
+                                }
+                            }
 
+                            // TODO: NAO DEIXAR POR LETRAS QUANDO PEDE NUMEROS
                             Console.Write("\nQual é a coluna que vai colocar a peça? ");
                             int column = int.Parse(Console.ReadLine()!);
 
@@ -172,7 +178,7 @@ namespace n_in_row {
                     case "sair":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        Console.WriteLine("\nObrigado por jogar...\n\nDesenvolvido por:\nFrancisco Reis;\nRicardo Martins;\nSérgio Silva.\n\n");
+                        Console.WriteLine("\nObrigado por jogar...\n\nDesenvolvido por:\n\nFrancisco Reis;\nRicardo Martins;\nSérgio Silva.");
 
                         break;
 
