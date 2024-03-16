@@ -302,7 +302,7 @@ namespace n_in_row.src.Models {
         }
 
 
-        // TODO: Ricardo
+        
                 public void GameDetails()
                 {
                     if (!IsGameOnGoing)
@@ -328,7 +328,7 @@ namespace n_in_row.src.Models {
                     }
                 }
 
-        // TODO: Ricardo
+        
         public void Forfeit(Game? currentGame) 
         {
             if (currentGame == null) {
@@ -353,7 +353,7 @@ namespace n_in_row.src.Models {
 
 
         // TODO: Sérgio
-        private void ShowGameBoard() {
+        public void ShowGameBoard() {
             Console.WriteLine();
 
             for (int i = Board.Rows; i > 0; i--) {

@@ -179,6 +179,15 @@ namespace n_in_row {
                     case "v":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
+                        if (currentGame != null) {
+                            currentGame.ShowGameBoard();
+                            Console.WriteLine($"\nTamanho da grelha: {currentGame.Board.Columns}x{currentGame.Board.Rows}");
+                        } else {
+                            Console.WriteLine("Não existe jogo em curso.");
+                        }
+
+                        PressKeyToContinue();
+
                         break;
 
                     case "sair":
