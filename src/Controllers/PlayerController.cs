@@ -11,7 +11,7 @@ namespace n_in_row.src.Controllers
             string playerName = Console.ReadLine() ?? "";
 
             while (string.IsNullOrWhiteSpace(playerName.Trim())) {
-                Console.WriteLine($"\nO nome '{playerName}' é inválido.");
+                Console.WriteLine($"O nome '{playerName}' é inválido.");
 
                 Console.Write("\nDigite o nome do jogador: ");
                 playerName = Console.ReadLine() ?? "";
@@ -31,7 +31,7 @@ namespace n_in_row.src.Controllers
             string playerSymbol = Console.ReadLine() ?? "";
 
             while (string.IsNullOrWhiteSpace(playerSymbol.Trim()) || !Constants.ALLOWED_SYMBOLS.Contains(playerSymbol)) {
-                Console.WriteLine($"\nO símbolo '{playerSymbol}' é inválido.");
+                Console.WriteLine($"O símbolo '{playerSymbol}' é inválido.");
 
                 Console.Write("\nDigite o símbolo do jogador: ");
                 playerSymbol = Console.ReadLine() ?? "";
@@ -67,7 +67,7 @@ namespace n_in_row.src.Controllers
 
         public void ShowPlayerList(Game? currentGame) {
             if (PlayerDictionary.Count <= 0) {
-                Console.WriteLine("\nA lista de jogadores está vazia.");
+                Console.WriteLine("\nNão existem jogadores registados. Utilize 'rj' para registar um jogador.");
 
                 return;
             }

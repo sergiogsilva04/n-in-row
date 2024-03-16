@@ -33,7 +33,7 @@
                 { "d", "Desistir" },
                 { "cp", "Colocar peça" },
                 { "v", "Estado atual da grelha" },
-                { "sair", "Sair" }
+                { "sair", "Saída" }
             };
     }
 }

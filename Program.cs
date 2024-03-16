@@ -12,6 +12,21 @@ namespace n_in_row {
             string selectedOption;
             Game? currentGame = null;
 
+            playerController.PlayerDictionary.Add("sergio", new Player("sergio", "x"));
+            playerController.PlayerDictionary.Add("silva", new Player("silva", "o"));
+
+            Queue<Player> testPlayers = new Queue<Player>();
+
+            testPlayers.Enqueue(playerController.PlayerDictionary.First().Value);
+            testPlayers.Enqueue(playerController.PlayerDictionary.Last().Value);
+
+            Array.ForEach(testPlayers.ToArray(), (player) => {
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 2, 1));
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Right, 3, 1));
+            });
+
+            currentGame = new(testPlayers, new GameBoard(3, 3, 3));
+
             do {
                 Console.WriteLine("\n|--------: N em linha :--------|");
                 Console.WriteLine("|                              |");
@@ -64,6 +79,8 @@ namespace n_in_row {
                     case "ij":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
+                        currentGame = null;
+
                         if (playerController.PlayerDictionary.Count <= 0) {
                             Console.WriteLine("\nNão existem jogadores registados. Utilize 'rj' para registar um jogador.");
 
@@ -101,13 +118,13 @@ namespace n_in_row {
                             break;
                         }
 
-                        bool keepPlaying;
+                        bool keepPlaying, isValidInput;
 
                         do {
                             Console.WriteLine($"\nÉ a vez do jogador: {currentGame.CurrentPlayer}.");
 
                             List<SpecialPiece> currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
-                            SpecialPiece? selectedSpecialPiece;
+                            SpecialPiece? selectedSpecialPiece = null;
 
                             if (currentPlayerSpecialPieces.Count > 0) {
                                 Console.Write("\nUtilizar peça especial? [s/n]: ");
@@ -120,28 +137,33 @@ namespace n_in_row {
                                     }
 
                                     Console.Write($"\nQual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
+                                    
+                                    isValidInput = int.TryParse(Console.ReadLine(), out int selectedIndex);
 
-                                    // TODO: VERIFICAR NUMERO SELCIONADO
-                                    selectedSpecialPiece = currentPlayerSpecialPieces[int.Parse(Console.ReadLine()!) - 1];
+                                    while (!isValidInput || selectedIndex <= 0 || selectedIndex > currentPlayerSpecialPieces.Count) {
+                                        Console.WriteLine($"Seleção inválida. Tem que ser um número de 1 a {currentPlayerSpecialPieces.Count}.");
 
-                                    Console.WriteLine($"\nPeça especial selecionada: {selectedSpecialPiece}");
+                                        Console.Write($"\nQual a peça a utilizar? ");
+                                        isValidInput = int.TryParse(Console.ReadLine(), out selectedIndex);
+                                    }
+
+                                    selectedSpecialPiece = currentPlayerSpecialPieces[selectedIndex - 1];
+
+                                    Console.WriteLine($"\nPeça especial selecionada: [{selectedSpecialPiece.TranslatedDirection()}] - Tamanho: {selectedSpecialPiece.Length}");
                                 }
                             }
 
-                            // TODO: NAO DEIXAR POR LETRAS QUANDO PEDE NUMEROS
                             Console.Write("\nQual é a coluna que vai colocar a peça? ");
-                            int column = int.Parse(Console.ReadLine()!);
+                            isValidInput = int.TryParse(Console.ReadLine(), out int column);
 
-                            while (column <= 0 || column > currentGame.Board.Columns) {
+                            while (!isValidInput || column <= 0 || column > currentGame.Board.Columns) {
                                 Console.WriteLine($"Coluna inválida. Tem que ser um número entre 1 e {currentGame.Board.Columns}");
 
                                 Console.Write("\nQual é a coluna que vai colocar a peça? ");
-                                column = int.Parse(Console.ReadLine()!);
+                                isValidInput = int.TryParse(Console.ReadLine(), out column);
                             }
 
-                            currentGame.Play(column - 1, null);
-
-                            //*selectedSpecialPiece = null;*//*
+                            currentGame.Play(column - 1, selectedSpecialPiece);
 
                             if (!currentGame.IsGameOnGoing) {
                                 break;
@@ -179,69 +201,6 @@ namespace n_in_row {
                 }
 
             } while (selectedOption != "sair");
-
-            /*PlayerController playerController = new();
-
-            Player player1 = new("Sérgio Silva", "S");
-            Player player2 = new("Francisco", "F");
-
-            playerController.AddPlayer(player1);
-            playerController.AddPlayer(player2);
-
-            Console.WriteLine();
-
-            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 3, 2));
-            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 5, 2));
-            player1.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 1, 2));
-
-            Game currentGame = new(
-                victoryLength: 4,
-                new GameBoard(lines: 5, columns: 5),
-                player1: player1,
-                player2: player2
-            );
-
-                        /*SpecialPiece? selectedSpecialPiece = null;
-                        List<SpecialPiece> currentPlayerSpecialPieces = [];*/
-
-            /*do {
-                Console.WriteLine($"É a vez do jogador: {currentGame.CurrentPlayer.Name}");
-
-                *//*currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
-
-                if (currentPlayerSpecialPieces.Count > 0) {
-                    Console.Write("Utilizar peça especial? (s/n): ");
-
-                    if (Console.ReadLine() == "s") {
-
-                        Console.WriteLine();
-
-                        Array.ForEach(currentPlayerSpecialPieces.ToArray(), Console.WriteLine);
-
-                        Console.Write($"\nQual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
-
-                        selectedSpecialPiece = currentPlayerSpecialPieces[int.Parse(Console.ReadLine()!) - 1];
-                    }
-                } *//*
-
-                Console.Write("Qual é a coluna que vai colocar a peça? ");
-                int column = int.Parse(Console.ReadLine()!);
-
-                while (column < 1 || column > currentGame.Board.Columns) {
-                    Console.WriteLine($"Coluna inválida. Tem que ser um número entre 1 e {currentGame.Board.Columns}");
-
-                    Console.Write("\nQual é a coluna que vai colocar a peça? ");
-                    column = int.Parse(Console.ReadLine()!);
-                }
-
-                currentGame.Play(column - 1, null);
-
-                *//*selectedSpecialPiece = null;*//*
-
-                Console.WriteLine();
-
-            } while (currentGame.IsGameOnGoing);
-        }*/
         }
 
         public static void PressKeyToContinue() {

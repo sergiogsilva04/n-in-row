@@ -18,9 +18,9 @@ namespace n_in_row.src.Models {
                 string name = Console.ReadLine() ?? "";
 
                 while (string.IsNullOrWhiteSpace(name)) {
-                    Console.WriteLine($"\nO nome '{name}' é inválido.");
+                    Console.WriteLine($"O nome '{name}' é inválido.");
 
-                    Console.Write($"Digite o nome do {i + 1}º jogador: ");
+                    Console.Write($"\nDigite o nome do {i + 1}º jogador: ");
                     name = Console.ReadLine() ?? "";
                 }
 
@@ -48,33 +48,35 @@ namespace n_in_row.src.Models {
             }
 
             Console.Write("Qual o comprimento do jogo? ");
-            int columns = int.Parse(Console.ReadLine()!);
+            bool isValidInput = int.TryParse(Console.ReadLine(), out int columns);
 
-            while (string.IsNullOrWhiteSpace(columns.ToString()) || columns < Constants.MIN_BOARD_COLUMNS) {
-                Console.WriteLine($"\nComprimento inválido. Tem que ter um número mínimo de {Constants.MIN_BOARD_COLUMNS} {(Constants.MIN_BOARD_COLUMNS == 1 ? "coluna" : "colunas")}.");
+            while (!isValidInput || string.IsNullOrWhiteSpace(columns.ToString()) || columns < Constants.MIN_BOARD_COLUMNS) {
+                Console.WriteLine($"Comprimento inválido. Tem que ter um número mínimo de {Constants.MIN_BOARD_COLUMNS} {(Constants.MIN_BOARD_COLUMNS == 1 ? "coluna" : "colunas")}.");
 
-                Console.Write("Qual o comprimento do jogo? ");
-                columns = int.Parse(Console.ReadLine()!);
+                Console.Write("\nQual o comprimento do jogo? ");
+                isValidInput = int.TryParse(Console.ReadLine(), out columns);
             }
 
             Console.Write("Qual a altura do jogo? ");
-            int rows = int.Parse(Console.ReadLine()!);
+            isValidInput = int.TryParse(Console.ReadLine(), out int rows);
 
-            while (string.IsNullOrWhiteSpace(rows.ToString()) || rows < Constants.MIN_BOARD_ROWS) {
+            while (!isValidInput || string.IsNullOrWhiteSpace(rows.ToString()) || rows < Constants.MIN_BOARD_ROWS) {
                 Console.WriteLine($"Altura inválida. Tem que ter um número mínimo de {Constants.MIN_BOARD_ROWS} {(Constants.MIN_BOARD_ROWS == 1 ? "linha" : "linhas")}.");
 
-                Console.Write("Qual a altura do jogo? ");
-                rows = int.Parse(Console.ReadLine()!);
+                Console.Write("\nQual a altura do jogo? ");
+                isValidInput = int.TryParse(Console.ReadLine(), out rows);
             }
 
             Console.Write("Qual é o tamanho da sequência vencedora? ");
-            int victoryLength = int.Parse(Console.ReadLine()!);
+            isValidInput = int.TryParse(Console.ReadLine(), out int victoryLength);
 
-            while (string.IsNullOrWhiteSpace(victoryLength.ToString()) || victoryLength < Constants.MIN_VICTORY_LENGTH || victoryLength > rows || victoryLength > columns) {
-                Console.WriteLine($"\nTamanho inválido. Tem que ser um número mínimo de {Constants.MIN_VICTORY_LENGTH} e não pode exceder o comprimento ({columns}) e a altura ({rows}).");
+            while (!isValidInput || string.IsNullOrWhiteSpace(victoryLength.ToString()) || victoryLength < Constants.MIN_VICTORY_LENGTH
+                || victoryLength > rows || victoryLength > columns) {
+
+                Console.WriteLine($"Tamanho inválido. Tem que ser um número mínimo de {Constants.MIN_VICTORY_LENGTH} e não pode exceder o comprimento ({columns}) e a altura ({rows}).");
 
                 Console.Write("\nQual é o tamanho da sequência vencedora? ");
-                victoryLength = int.Parse(Console.ReadLine()!);
+                isValidInput = int.TryParse(Console.ReadLine(), out victoryLength);
             }
 
             Console.Write("\nAdicionar alguma peça especial? [s/n]: ");
@@ -88,9 +90,9 @@ namespace n_in_row.src.Models {
                     direction = (Console.ReadLine() ?? "").Trim().ToLower();
 
                     if (direction != "esquerda" && direction != "direita") {
-                        Console.WriteLine($"\nDireção inválida. As direções disponíveis são 'esquerda' e 'direita'.");
+                        Console.WriteLine($"Direção inválida. As direções disponíveis são 'esquerda' e 'direita'.");
 
-                        Console.Write("Qual é a direção da peça? ");
+                        Console.Write("\nQual é a direção da peça? ");
                         direction = (Console.ReadLine() ?? "").Trim().ToLower();
                     }
 
@@ -99,23 +101,23 @@ namespace n_in_row.src.Models {
                 SpecialPieceDirection specialPieceDirection = direction == "esquerda" ? SpecialPieceDirection.Left : SpecialPieceDirection.Right;
 
                 Console.Write("Qual é o tamanho da peça? ");
-                int specialPieceLength = int.Parse(Console.ReadLine()!);
+                isValidInput = int.TryParse(Console.ReadLine(), out int specialPieceLength);
 
-                while (string.IsNullOrWhiteSpace(specialPieceLength.ToString()) || specialPieceLength > columns) {
-                    Console.WriteLine($"\nTamanho inválido. Tem que ser um número entre 2 e o número de colunas ({columns}).");
+                while (!isValidInput || string.IsNullOrWhiteSpace(specialPieceLength.ToString()) || specialPieceLength < 2 || specialPieceLength > columns) {
+                    Console.WriteLine($"Tamanho inválido. Tem que ser um número entre 2 e o número de colunas ({columns}).");
 
                     Console.Write("\nQual é o tamanho da peça? ");
-                    specialPieceLength = int.Parse(Console.ReadLine()!);
+                    isValidInput = int.TryParse(Console.ReadLine(), out specialPieceLength);
                 }
 
                 Console.Write("Qual é a quantidade de peças? ");
-                int specialPieceQuantity = int.Parse(Console.ReadLine()!);
+                isValidInput = int.TryParse(Console.ReadLine(), out int specialPieceQuantity);
 
-                while (string.IsNullOrWhiteSpace(specialPieceQuantity.ToString()) || specialPieceQuantity < 1) {
-                    Console.WriteLine($"\nQuantidade inválida. Tem que haver pelo menos 1 peça.");
+                while (!isValidInput || string.IsNullOrWhiteSpace(specialPieceQuantity.ToString()) || specialPieceQuantity < 1) {
+                    Console.WriteLine($"Quantidade inválida. Tem que haver pelo menos 1 peça.");
 
-                    Console.Write("Qual é a quantidade de peças? ");
-                    specialPieceQuantity = int.Parse(Console.ReadLine()!);
+                    Console.Write("\nQual é a quantidade de peças? ");
+                    isValidInput = int.TryParse(Console.ReadLine(), out specialPieceQuantity);
                 }
 
                 SpecialPiece specialPiece = new(specialPieceDirection, specialPieceLength, specialPieceQuantity);
@@ -169,17 +171,19 @@ namespace n_in_row.src.Models {
                 if (Board.Grid[i, column] == null) {
                     Board.Grid[i, column] = CurrentPlayer;
 
-                    /*                    if (specialPiece == null) {
-                                            Board.Grid[i, column] = CurrentPlayer;
+                    if (specialPiece == null) {
+                        Board.Grid[i, column] = CurrentPlayer;
 
-                                        } else {
-                                            for (int j = 0; j < specialPiece.Length; j++) {
-                                                Board.Grid[i, j] = CurrentPlayer;
-                                            }
-                                        }*/
-                    ;
+                    } else {
+                        // TODO: VERIFICAR A DIREÇÃO E O TAMANHO DA PEÇA
+                        for (int j = 0; j < specialPiece.Length; j++) {
+                            Board.Grid[i, j] = CurrentPlayer;
+                        }
+                    }
 
                     Console.WriteLine("\nPeça colocada.");
+
+                     // TODO: DIMINUIR PEÇA ESPECIAL DA LISTA
 
                     ShowGameBoard();
 
@@ -197,7 +201,7 @@ namespace n_in_row.src.Models {
                     if (gameStatus.Name == "draw") {
                         Players.ToList().ForEach((player) => player.SetStatistics(StatisticType.Draw));
 
-                        Console.Write("\nJogo empatado!");
+                        Console.WriteLine("\nJogo empatado!");
 
                         return;
                     }
@@ -306,39 +310,32 @@ namespace n_in_row.src.Models {
         public void GameDetails() { }
 
         // TODO: Ricardo
-        public void Forfeit()
-        {
-            if (IsGameOnGoing)
-            {
-                Console.WriteLine("O jogo acabou, a reiniciar");
-
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = false*/;
-
-                Console.WriteLine("Pronto para começar novo jogo");
-            }
-            else
-            {
-                Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
-
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = true;*/
-
-                Console.WriteLine("Pronto para começar novo jogo");
-            }
-        }
+        public void Forfeit() { }
 
         // TODO: Sérgio
         private void ShowGameBoard() {
             Console.WriteLine();
 
-            for (int i = Board.Rows; i > 0; i--) {
+            int maxRowLength = Board.Rows.ToString().Length;
+            int maxColumnLength = Board.Columns.ToString().Length;
+
+            Console.Write(new string(' ', maxRowLength + 1));
+
+            for (int j = 0; j < Board.Columns; j++) {
+                Console.Write($"{j + 1}".PadRight(maxColumnLength + 1));
+            }
+
+            Console.WriteLine();
+
+            for (int i = 0; i < Board.Rows; i++) {
+                string paddedRowNumber = $"{i + 1}".PadLeft(maxRowLength);
+
+                Console.Write(paddedRowNumber + " ".PadRight(maxRowLength - paddedRowNumber.Length + 1));
+
                 for (int j = 0; j < Board.Columns; j++) {
-                    Console.Write(Board.Grid[i - 1, j]?.Symbol ?? "-");
+                    string symbol = Board.Grid[Board.Rows - 1 - i, j]?.Symbol ?? "-";
+
+                    Console.Write(symbol.PadRight(maxColumnLength + 1));
                 }
 
                 Console.WriteLine();
