@@ -1,4 +1,5 @@
-﻿
+﻿using n_in_row.src.Controllers;
+using n_in_row.src.Models;
 namespace n_in_row.src.Models {
     internal class Game(int victoryLength, GameBoard board, Player player1, Player player2) {
         public int VictoryLength { get; private set; } = victoryLength;
@@ -166,30 +167,36 @@ namespace n_in_row.src.Models {
         public void GameDetails() { }
 
         // TODO: Ricardo
-        public void Forfeit()
+        public void Forfeit(Player forfeitingPlayer)
         {
-            if (IsGameOnGoing)
+            // Check if the game is ongoing
+            if (!IsGameOnGoing)
             {
-                Console.WriteLine("O jogo acabou, a reiniciar");
-
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = false*/;
-
-                Console.WriteLine("Pronto para começar novo jogo");
+                Console.WriteLine("No ongoing game");
+                return;
             }
-            else
+
+            // Check if the forfeiting player is in the ongoing game
+            if (forfeitingPlayer != Player1 && forfeitingPlayer != Player2)
             {
-                Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
-
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = true;*/
-
-                Console.WriteLine("Pronto para começar novo jogo");
+                Console.WriteLine("Player is not part of the ongoing game.");
+                return;
             }
+
+            
+            Player opponentPlayer = forfeitingPlayer == Player1 ? Player2 : Player1;
+
+            
+            IsGameOnGoing = false;
+
+            
+            GameController.RegisterVictory(opponentPlayer);
+
+            
+            GameController.RegisterDefeat(forfeitingPlayer);
+
+            
+            Console.WriteLine($"Player {forfeitingPlayer.Name} has forfeited. Player {opponentPlayer.Name} wins!");
         }
 
         // TODO: Sérgio
