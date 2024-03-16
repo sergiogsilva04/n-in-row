@@ -261,7 +261,7 @@ namespace n_in_row.src.Models {
             // End the game
             currentGame.IsGameOnGoing = false;
 
-            Console.WriteLine("\nDesistencia com sucesso. Jogo terminado");
+            Console.WriteLine("Desistencia com sucesso. Jogo terminado");
         }
 
 
