@@ -33,7 +33,8 @@
                 { "d", "Desistir" },
                 { "cp", "Colocar peça" },
                 { "v", "Estado atual da grelha" },
-                { "sair", "Saída" }
+                { "hj", "Histórico de jogos" },
+                { "sair", "Sair" }
             };
     }
 }

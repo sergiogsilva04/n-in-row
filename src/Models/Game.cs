@@ -303,46 +303,56 @@ namespace n_in_row.src.Models {
 
             return new Player("draw", "");
         }
-
-
-        // TODO: Ricardo
-        public void GameDetails() { }
-
-        // TODO: Ricardo
-        public void Forfeit(Player forfeitingPlayer)
+        
+        public void GameDetails()
         {
-            // Check if the game is ongoing
             if (!IsGameOnGoing)
             {
-                Console.WriteLine("No ongoing game");
+                Console.WriteLine("Não existe jogo em curso.");
                 return;
             }
 
-            // Check if the forfeiting player is in the ongoing game
-            if (forfeitingPlayer != Player1 && forfeitingPlayer != Player2)
+            Console.WriteLine($"\nTamanho da grelha: {Board.Columns}x{Board.Rows}");
+
+            Console.WriteLine("\nJogadores:");
+            List<string> playerNames = Players.OrderBy(player => player.Name).Select(player => player.Name).ToList();
+            foreach (string playerName in playerNames)
             {
-                Console.WriteLine("Player is not part of the ongoing game.");
+                Console.WriteLine($"\n- {playerName}");
+
+                // Display special pieces for the current player
+                Player currentPlayer = Players.First(player => player.Name == playerName);
+                foreach (SpecialPiece specialPiece in currentPlayer.SpecialPieces)
+                {
+                    Console.WriteLine($"  - {specialPiece.Length}x [{specialPiece.Direction}] - Quantidade: {specialPiece.Quantity}");
+                }
+            }
+        }
+        
+        public void Forfeit(Game? currentGame) 
+        {
+            if (currentGame == null) {
+                Console.WriteLine("Nao existe jogo em curso");
                 return;
             }
 
-            
-            Player opponentPlayer = forfeitingPlayer == Player1 ? Player2 : Player1;
+            // Get the other player
+            Player otherPlayer = currentGame.Players.First(player => player != currentGame.CurrentPlayer);
 
-            
-            IsGameOnGoing = false;
+            // Register a defeat for the player who forfeited
+            currentGame.CurrentPlayer.SetStatistics(StatisticType.Defeat);
 
-            
-            GameController.RegisterVictory(opponentPlayer);
+            // Register a victory for the other player
+            otherPlayer.SetStatistics(StatisticType.Victory);
 
-            
-            GameController.RegisterDefeat(forfeitingPlayer);
+            // End the game
+            currentGame.IsGameOnGoing = false;
 
-            
-            Console.WriteLine($"Player {forfeitingPlayer.Name} has forfeited. Player {opponentPlayer.Name} wins!");
+            Console.WriteLine("\nDesistencia com sucesso. Jogo terminado");
         }
 
         // TODO: Sérgio
-        private void ShowGameBoard() {
+        public void ShowGameBoard() {
             Console.WriteLine();
 
             int maxRowLength = Board.Rows.ToString().Length;
