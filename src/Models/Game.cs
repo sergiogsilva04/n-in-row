@@ -308,50 +308,45 @@ namespace n_in_row.src.Models {
         {
             if (!IsGameOnGoing)
             {
-                Console.WriteLine("Não existe jogo em curso.");
+                Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+
                 return;
             }
 
             Console.WriteLine($"\nTamanho da grelha: {Board.Columns}x{Board.Rows}");
 
             Console.WriteLine("\nJogadores:");
-            List<string> playerNames = Players.OrderBy(player => player.Name).Select(player => player.Name).ToList();
-            foreach (string playerName in playerNames)
+            List<Player> players = Players.OrderBy(player => player.Name).Select(player => player).ToList();
+            foreach (Player player in players)
             {
-                Console.WriteLine($"\n- {playerName}");
+                Console.WriteLine($"\n- {player}\n");
 
-                // Display special pieces for the current player
-                Player currentPlayer = Players.First(player => player.Name == playerName);
-                foreach (SpecialPiece specialPiece in currentPlayer.SpecialPieces)
+                foreach (SpecialPiece specialPiece in player.SpecialPieces)
                 {
-                    Console.WriteLine($"  - {specialPiece.Length}x [{specialPiece.Direction}] - Quantidade: {specialPiece.Quantity}");
+                    Console.WriteLine($"  * {specialPiece}");
                 }
             }
         }
         
-        public void Forfeit(Game? currentGame) 
+        public void Forfeit() 
         {
-            if (currentGame == null) {
-                Console.WriteLine("Nao existe jogo em curso");
+            if (!IsGameOnGoing) {
+                Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+
                 return;
             }
 
-            // Get the other player
-            Player otherPlayer = currentGame.Players.First(player => player != currentGame.CurrentPlayer);
+            Player otherPlayer = Players.First(player => player != CurrentPlayer);
 
-            // Register a defeat for the player who forfeited
-            currentGame.CurrentPlayer.SetStatistics(StatisticType.Defeat);
+            CurrentPlayer.SetStatistics(StatisticType.Defeat);
 
-            // Register a victory for the other player
             otherPlayer.SetStatistics(StatisticType.Victory);
 
-            // End the game
-            currentGame.IsGameOnGoing = false;
+            IsGameOnGoing = false;
 
-            Console.WriteLine("\nDesistencia com sucesso. Jogo terminado");
+            Console.WriteLine($"\n'{CurrentPlayer.Name}' desistiu do jogo! Jogo terminado e '{otherPlayer.Name}' venceu a partida.");
         }
 
-        // TODO: Sérgio
         public void ShowGameBoard() {
             Console.WriteLine();
 

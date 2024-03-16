@@ -9,7 +9,6 @@ namespace n_in_row {
             Console.OutputEncoding = Encoding.UTF8;
 
             PlayerController playerController = new();
-
             
             string selectedOption;
             Game? currentGame = null;
@@ -43,7 +42,6 @@ namespace n_in_row {
                 Console.WriteLine("| 'd' - Desistir               |");
                 Console.WriteLine("| 'cp' - Colocar peça          |");
                 Console.WriteLine("| 'v' - Estado atual da grelha |");
-                Console.WriteLine("| 'hj' - Histórico de jogos    |");
                 Console.WriteLine("|------------------------------|");
                 Console.WriteLine("| 'sair' - Sair do programa    |");
                 Console.WriteLine("|--------: N em linha :--------|");
@@ -104,25 +102,31 @@ namespace n_in_row {
 
                     case "dj":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
-                        if (currentGame != null) {
-                            currentGame.GameDetails(); // Call the GameDetails method on the currentGame instance
-                        } else {
-                            Console.WriteLine("\nNão existe jogo em curso.");
+
+                        if (currentGame == null) {
+                            Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+
+                            break;
                         }
+
+                        currentGame.GameDetails();
+
                         PressKeyToContinue();
 
                         break;
 
                     case "d":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
-                        if (currentGame != null) {
-                                currentGame.Forfeit(currentGame); // Call the Forfeit method on the currentGame instance
-                                currentGame = null; // Reset the current game since it has ended
-                                
-                            } else {
-                                Console.WriteLine("\nNão existe jogo em curso.");
-                            }
-                            PressKeyToContinue();
+
+                        if (currentGame == null) {
+                            Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+
+                            break;
+                        }
+
+                        currentGame.Forfeit();
+
+                        PressKeyToContinue();
 
                         break;
 
@@ -202,19 +206,15 @@ namespace n_in_row {
                     case "v":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        if (currentGame != null) {
-                            currentGame.ShowGameBoard();
-                            Console.WriteLine($"\nTamanho da grelha: {currentGame.Board.Columns}x{currentGame.Board.Rows}");
-                        } else {
-                            Console.WriteLine("Não existe jogo em curso.");
+                        if (currentGame == null) {
+                            Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+
+                            break;
                         }
 
+                        currentGame.ShowGameBoard();
+
                         PressKeyToContinue();
-
-                        break;
-
-                    case "hj":
-                        SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
                         break;
 
