@@ -94,7 +94,7 @@ namespace n_in_row {
                         if (currentGame != null) {
                                 currentGame.Forfeit(currentGame); // Call the Forfeit method on the currentGame instance
                                 currentGame = null; // Reset the current game since it has ended
-                                Console.WriteLine("\nDesistencia com sucesso. Jogo terminado.");
+                                
                             } else {
                                 Console.WriteLine("\nNão existe jogo em curso.");
                             }
