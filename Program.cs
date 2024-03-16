@@ -28,6 +28,7 @@ namespace n_in_row {
                 Console.WriteLine("| 'd' - Desistir               |");
                 Console.WriteLine("| 'cp' - Colocar peça          |");
                 Console.WriteLine("| 'v' - Estado atual da grelha |");
+                Console.WriteLine("| 'hj' - Histórico de jogos    |");
                 Console.WriteLine("|------------------------------|");
                 Console.WriteLine("| 'sair' - Sair do programa    |");
                 Console.WriteLine("|--------: N em linha :--------|");
@@ -187,6 +188,11 @@ namespace n_in_row {
                         }
 
                         PressKeyToContinue();
+
+                        break;
+
+                    case "hj":
+                        SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
                         break;
 
