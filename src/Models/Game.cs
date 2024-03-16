@@ -303,7 +303,30 @@ namespace n_in_row.src.Models {
 
 
         // TODO: Ricardo
-        public void GameDetails() { }
+                public void GameDetails()
+                {
+                    if (!IsGameOnGoing)
+                    {
+                        Console.WriteLine("Não existe jogo em curso.");
+                        return;
+                    }
+
+                    Console.WriteLine($"\nTamanho da grelha: {Board.Columns}x{Board.Rows}");
+
+                    Console.WriteLine("\nJogadores:");
+                    List<string> playerNames = Players.OrderBy(player => player.Name).Select(player => player.Name).ToList();
+                    foreach (string playerName in playerNames)
+                    {
+                        Console.WriteLine($"\n- {playerName}");
+
+                        // Display special pieces for the current player
+                        Player currentPlayer = Players.First(player => player.Name == playerName);
+                        foreach (SpecialPiece specialPiece in currentPlayer.SpecialPieces)
+                        {
+                            Console.WriteLine($"  - {specialPiece.Length}x [{specialPiece.Direction}] - Quantidade: {specialPiece.Quantity}");
+                        }
+                    }
+                }
 
         // TODO: Ricardo
         public void Forfeit(Game? currentGame) 

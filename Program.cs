@@ -86,6 +86,12 @@ namespace n_in_row {
 
                     case "dj":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
+                        if (currentGame != null) {
+                            currentGame.GameDetails(); // Call the GameDetails method on the currentGame instance
+                        } else {
+                            Console.WriteLine("\nNão existe jogo em curso.");
+                        }
+                        PressKeyToContinue();
 
                         break;
 
