@@ -242,31 +242,28 @@ namespace n_in_row.src.Models {
         public void GameDetails() { }
 
         // TODO: Ricardo
-        public void Forfeit()
+        public void Forfeit(Game? currentGame) 
         {
-            if (IsGameOnGoing)
-            {
-                Console.WriteLine("O jogo acabou, a reiniciar");
-
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = false*/;
-
-                Console.WriteLine("Pronto para começar novo jogo");
+            if (currentGame == null) {
+                Console.WriteLine("Nao existe jogo em curso");
+                return;
             }
-            else
-            {
-                Console.WriteLine($"{CurrentPlayer.Name} desistiu, a reiniciar");
 
-               /* // Reset
-                Board.ClearGrid();
-                CurrentPlayer = Player1;
-                IsGameOnGoing = true;*/
+            // Get the other player
+            Player otherPlayer = currentGame.Players.First(player => player != currentGame.CurrentPlayer);
 
-                Console.WriteLine("Pronto para começar novo jogo");
-            }
+            // Register a defeat for the player who forfeited
+            currentGame.CurrentPlayer.SetStatistics(StatisticType.Defeat);
+
+            // Register a victory for the other player
+            otherPlayer.SetStatistics(StatisticType.Victory);
+
+            // End the game
+            currentGame.IsGameOnGoing = false;
+
+            Console.WriteLine("Desistencia com sucesso. Jogo terminado");
         }
+
 
         // TODO: Sérgio
         private void ShowGameBoard() {

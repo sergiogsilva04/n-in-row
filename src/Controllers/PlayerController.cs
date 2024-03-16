@@ -64,6 +64,7 @@ namespace n_in_row.src.Controllers
 
             Console.WriteLine($"\nO jogador '{playerName}' foi removido com sucesso.");
         }
+        
 
         public void ShowPlayerList(Game? currentGame) {
             if (PlayerDictionary.Count <= 0) {

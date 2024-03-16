@@ -9,6 +9,8 @@ namespace n_in_row {
             Console.OutputEncoding = Encoding.UTF8;
 
             PlayerController playerController = new();
+
+            
             string selectedOption;
             Game? currentGame = null;
 
@@ -89,6 +91,14 @@ namespace n_in_row {
 
                     case "d":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
+                        if (currentGame != null) {
+                                currentGame.Forfeit(currentGame); // Call the Forfeit method on the currentGame instance
+                                currentGame = null; // Reset the current game since it has ended
+                                Console.WriteLine("\nDesistencia com sucesso. Jogo terminado.");
+                            } else {
+                                Console.WriteLine("\nNão existe jogo em curso.");
+                            }
+                            PressKeyToContinue();
 
                         break;
 
