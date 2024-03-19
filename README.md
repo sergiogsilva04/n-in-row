@@ -1,1 +1,1 @@
-# n-in-row
+N in a Row is a classic two-player game where the objective is to be the first player to form a straight line of N consecutive symbols (usually represented by pieces or markers) vertically, horizontally, or diagonally on a game board. This project implements a digital version of the N in a Row game with additional features such as special pieces and customizable game settings.
