@@ -76,7 +76,7 @@ namespace n_in_row.src.Controllers
             StringBuilder playerClassification = new("\n");
 
             Array.ForEach(PlayerDictionary.ToArray(), (player) => {
-                playerClassification.Append($"{(currentGame != null && currentGame.HasPlayer(player.Key) ? "« EM JOGO » " : "")}{player.Value} [{player.Value.TotalGamesPlayed()} {(player.Value.TotalGamesPlayed() == 1 ? "jogo" : "jogos")}]");
+                playerClassification.Append($"{(currentGame != null && currentGame.IsGameOnGoing && currentGame.HasPlayer(player.Key) ? "« EM JOGO » " : "")}{player.Value} [{player.Value.TotalGamesPlayed()} {(player.Value.TotalGamesPlayed() == 1 ? "jogo" : "jogos")}]");
                 playerClassification.Append($" ({player.Value.GetStatistics(player.Value.Victories)}% vitórias - {player.Value.Victories})");
                 playerClassification.Append($" ({player.Value.GetStatistics(player.Value.Draws)}% empates - {player.Value.Draws})");
                 playerClassification.Append($" ({player.Value.GetStatistics(player.Value.Defeats)}% derrotas - {player.Value.Defeats})");

@@ -16,17 +16,19 @@ namespace n_in_row {
             playerController.PlayerDictionary.Add("sergio", new Player("sergio", "x"));
             playerController.PlayerDictionary.Add("silva", new Player("silva", "o"));
 
-            Queue<Player> testPlayers = new Queue<Player>();
+            Queue<Player> testPlayers = new();
 
             testPlayers.Enqueue(playerController.PlayerDictionary.First().Value);
             testPlayers.Enqueue(playerController.PlayerDictionary.Last().Value);
 
             Array.ForEach(testPlayers.ToArray(), (player) => {
-                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 2, 1));
-                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Right, 3, 1));
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 2, 4));
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 5, 4));
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Right, 3, 3));
+                player.AddSpecialPiece(new SpecialPiece(SpecialPieceDirection.Left, 4, 2));
             });
 
-            currentGame = new(testPlayers, new GameBoard(3, 3, 3));
+            currentGame = new(testPlayers, new GameBoard(10, 10, 3));
 
             do {
                 Console.WriteLine("\n|--------: N em linha :--------|");
@@ -80,15 +82,13 @@ namespace n_in_row {
                     case "ij":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        currentGame = null;
-
                         if (playerController.PlayerDictionary.Count <= 0) {
                             Console.WriteLine("\nNão existem jogadores registados. Utilize 'rj' para registar um jogador.");
 
                             break;
                         }
 
-                        if (currentGame != null) {
+                        if (currentGame != null && currentGame.IsGameOnGoing) {
                             Console.WriteLine("\nJá existe um jogo a decorrer. Utilize 'cp' para jogar.");
 
                             break;
@@ -103,7 +103,7 @@ namespace n_in_row {
                     case "dj":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        if (currentGame == null) {
+                        if (currentGame == null || !currentGame.IsGameOnGoing) {
                             Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
 
                             break;
@@ -118,7 +118,7 @@ namespace n_in_row {
                     case "d":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        if (currentGame == null) {
+                        if (currentGame == null || !currentGame.IsGameOnGoing) {
                             Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
 
                             break;
@@ -133,7 +133,7 @@ namespace n_in_row {
                     case "cp":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        if (currentGame == null) {
+                        if (currentGame == null || !currentGame.IsGameOnGoing) {
                             Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
 
                             break;
@@ -147,18 +147,18 @@ namespace n_in_row {
                             List<SpecialPiece> currentPlayerSpecialPieces = currentGame.CurrentPlayer.SpecialPieces;
                             SpecialPiece? selectedSpecialPiece = null;
 
-                            if (currentPlayerSpecialPieces.Count > 0) {
+                            if (currentPlayerSpecialPieces.Count > 0 && currentGame.CurrentPlayer.HasSpecialPiecesAvailable()) {
                                 Console.Write("\nUtilizar peça especial? [s/n]: ");
 
                                 if (Console.ReadLine() == "s") {
                                     Console.WriteLine();
 
                                     for (int i = 0; i < currentPlayerSpecialPieces.Count; i++) {
-                                        Console.WriteLine($"« {i + 1} » {currentPlayerSpecialPieces[i]}");
+                                        Console.WriteLine(currentPlayerSpecialPieces[i].IsSoldOut() ? currentPlayerSpecialPieces[i] : $"« {i + 1} » {currentPlayerSpecialPieces[i]}");
                                     }
 
                                     Console.Write($"\nQual a peça a utilizar (número de 1 a {currentPlayerSpecialPieces.Count}): ");
-                                    
+
                                     isValidInput = int.TryParse(Console.ReadLine(), out int selectedIndex);
 
                                     while (!isValidInput || selectedIndex <= 0 || selectedIndex > currentPlayerSpecialPieces.Count) {
@@ -169,6 +169,12 @@ namespace n_in_row {
                                     }
 
                                     selectedSpecialPiece = currentPlayerSpecialPieces[selectedIndex - 1];
+
+                                    if (selectedSpecialPiece.IsSoldOut()) {
+                                        Console.WriteLine($"\nJá não pode usar esta peça especíal pois já usou todas as peças disponíveis.");
+
+                                        break;
+                                    }
 
                                     Console.WriteLine($"\nPeça especial selecionada: [{selectedSpecialPiece.TranslatedDirection()}] - Tamanho: {selectedSpecialPiece.Length}");
                                 }
@@ -206,7 +212,7 @@ namespace n_in_row {
                     case "v":
                         SelectedOptionInfo(Constants.OPTION_MAP[selectedOption]);
 
-                        if (currentGame == null) {
+                        if (currentGame == null || !currentGame.IsGameOnGoing) {
                             Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
 
                             break;

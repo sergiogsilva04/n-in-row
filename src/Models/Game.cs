@@ -102,8 +102,8 @@ namespace n_in_row.src.Models {
                 Console.Write("Qual é o tamanho da peça? ");
                 isValidInput = int.TryParse(Console.ReadLine(), out int specialPieceLength);
 
-                while (!isValidInput || string.IsNullOrWhiteSpace(specialPieceLength.ToString()) || specialPieceLength < 2 || specialPieceLength > columns) {
-                    Console.WriteLine($"Tamanho inválido. Tem que ser um número entre 2 e o número de colunas ({columns}).");
+                while (!isValidInput || string.IsNullOrWhiteSpace(specialPieceLength.ToString()) || specialPieceLength < 2 || specialPieceLength >= victoryLength) {
+                    Console.WriteLine($"Tamanho inválido. Tem que ser um número entre 2 e menor que número da sequência vencedora ({victoryLength}).");
 
                     Console.Write("\nQual é o tamanho da peça? ");
                     isValidInput = int.TryParse(Console.ReadLine(), out specialPieceLength);
@@ -160,150 +160,203 @@ namespace n_in_row.src.Models {
         }
 
         public void Play(int column, SpecialPiece? specialPiece) {
-            for (int i = 0; i < Board.Rows; i++) {
-                if (Board.Grid[Board.Rows - 1, column] != null) {
-                    Console.WriteLine("\nColuna completa.");
+            if (Board.Grid[Board.Rows - 1, column] != null) {
+                Console.WriteLine("\nColuna completa.");
 
-                    return;
-                }
+                return;
+            }
 
-                if (Board.Grid[i, column] == null) {
-                    Board.Grid[i, column] = CurrentPlayer;
-
-                    if (specialPiece == null) {
+            if (specialPiece == null) {
+                for (int i = 0; i < Board.Rows; i++) {
+                    if (Board.Grid[i, column] == null) {
                         Board.Grid[i, column] = CurrentPlayer;
 
-                    } else {
-                        // TODO: VERIFICAR A DIREÇÃO E O TAMANHO DA PEÇA
-                        for (int j = 0; j < specialPiece.Length; j++) {
-                            Board.Grid[i, j] = CurrentPlayer;
+                        break;
+                    }
+                }
+
+            } else {
+                if (specialPiece.Direction == SpecialPieceDirection.Left) {
+                    if (column + 1 - specialPiece.Length < 0) {
+                        Console.WriteLine($"\nNão é possível colocar a peça especial [{specialPiece.TranslatedDirection()}] - Tamanho: {specialPiece.Length} na coluna {column + 1}.");
+
+                        return;
+                    }
+
+                    for (int j = column; j >= column - specialPiece.Length + 1; j--) {
+                        if (Board.Grid[Board.Rows - 1, j] != null) {
+                            Console.WriteLine($"\nNão pode colocar a peça especial nesta coluna pois a {j + 1}ª coluna já está completa.");
+
+                            return;
                         }
                     }
 
-                    Console.WriteLine("\nPeça colocada.");
+                    for (int i = column; i >= column - specialPiece.Length + 1; i--) {
+                        int targetRow = 0;
 
-                     // TODO: DIMINUIR PEÇA ESPECIAL DA LISTA
+                        for (int row = 0; row < Board.Rows; row++) {
+                            if (Board.Grid[row, i] == null) {
+                                targetRow = row;
 
-                    ShowGameBoard();
+                                break;
+                            }
+                        }
 
-                    Player? gameStatus = CheckGameStatus();
+                        Board.Grid[targetRow, i] = CurrentPlayer;
+                    }
 
-                    if (gameStatus == null) {
-                        Players.Enqueue(Players.Dequeue());
-                        CurrentPlayer = Players.Peek();
+                } else if (specialPiece.Direction == SpecialPieceDirection.Right) {
+                    if (column + specialPiece.Length > Board.Columns) {
+                        Console.WriteLine($"\nNão é possível colocar a peça especial [{specialPiece.TranslatedDirection()}] - Tamanho: {specialPiece.Length} na coluna {column + 1}.");
 
                         return;
                     }
 
-                    IsGameOnGoing = false;
+                    for (int j = 0; j < specialPiece.Length; j++) {
+                        if (Board.Grid[Board.Rows - 1, j] != null) {
+                            Console.WriteLine($"\nNão pode colocar a peça especial nesta coluna pois a {j + 1}ª coluna já está completa.");
 
-                    if (gameStatus.Name == "draw") {
-                        Players.ToList().ForEach((player) => player.SetStatistics(StatisticType.Draw));
-
-                        Console.WriteLine("\nJogo empatado!");
-
-                        return;
+                            return;
+                        }
                     }
 
-                    CurrentPlayer.SetStatistics(StatisticType.Victory);
+                    for (int i = column; i <= column + specialPiece.Length - 1; i++) {
+                        int targetRow = 0;
 
-                    Players.Where((player) => player.Name != CurrentPlayer.Name).ToList().ForEach((player) => player.SetStatistics(StatisticType.Defeat));
+                        for (int row = 0; row < Board.Rows; row++) {
+                            if (Board.Grid[row, i] == null) {
+                                targetRow = row;
 
-                    Console.WriteLine($"\nJogo terminado, venceu: {gameStatus}.");
+                                break;
+                            }
+                        }
 
-                    return;
+                        Board.Grid[targetRow, i] = CurrentPlayer;
+                    }
                 }
+
+                specialPiece.DecreaseQuantity();
             }
+
+            Console.WriteLine("\nPeça colocada.");
+
+            ShowGameBoard();
+
+            Player? gameStatus = CheckGameStatus();
+
+            if (gameStatus == null) {
+                Players.Enqueue(Players.Dequeue());
+                CurrentPlayer = Players.Peek();
+
+                return;
+            }
+
+            IsGameOnGoing = false;
+            Players.ToList().ForEach(player => player.SpecialPieces.Clear());
+
+            if (gameStatus.Name == "draw") {
+                Players.ToList().ForEach((player) => player.SetStatistics(StatisticType.Draw));
+
+                Console.WriteLine("\nJogo empatado!");
+
+                return;
+            }
+
+            CurrentPlayer.SetStatistics(StatisticType.Victory);
+
+            Players.Where((player) => player.Name != CurrentPlayer.Name).ToList().ForEach((player) => player.SetStatistics(StatisticType.Defeat));
+
+            Console.WriteLine($"\nJogo terminado, venceu: {gameStatus}.");
+
+            return;
         }
 
         private Player? CheckGameStatus() {
             int victoryLength = Board.VictoryLength;
 
-            for (var row = victoryLength - 1; row < Board.Rows; row++) {
-                for (var column = 0; column < Board.Columns; column++) {
-                    if (Board.Grid[row, column] != null) {
-                        // Vertical
-                        if (row - victoryLength + 1 >= 0) {
-                            bool isVictory = true;
+            for (int row = 0; row <= Board.Rows - victoryLength; row++) {
+                for (int column = 0; column < Board.Columns; column++) {
+                    // Vertical
+                    bool isVerticalVictory = true;
 
-                            for (var i = 1; i < victoryLength; i++) {
-                                if (Board.Grid[row, column] != Board.Grid[row - i, column]) {
-                                    isVictory = false;
+                    for (int i = 1; i < victoryLength; i++) {
+                        if (Board.Grid[row, column] != Board.Grid[row + i, column]) {
+                            isVerticalVictory = false;
 
-                                    break;
-                                }
-                            }
+                            break;
+                        }
+                    }
 
-                            if (isVictory) {
-                                return Board.Grid[row, column];
+                    if (isVerticalVictory) {
+                        return Board.Grid[row, column];
+                    }
+
+                    // Horizontal
+                    if (column <= Board.Columns - victoryLength) {
+                        bool isHorizontalVictory = true;
+
+                        for (int i = 1; i < victoryLength; i++) {
+                            if (Board.Grid[row, column] != Board.Grid[row, column + i]) {
+                                isHorizontalVictory = false;
+
+                                break;
                             }
                         }
 
-                        // Horizontal
-                        if (column + victoryLength <= Board.Columns) {
-                            bool isVictory = true;
+                        if (isHorizontalVictory) {
+                            return Board.Grid[row, column];
+                        }
+                    }
 
-                            for (var i = 1; i < victoryLength; i++) {
-                                if (Board.Grid[row, column] != Board.Grid[row, column + i]) {
-                                    isVictory = false;
+                    // Diagonal (direita)
+                    if (column <= Board.Columns - victoryLength && row <= Board.Rows - victoryLength) {
+                        bool isDiagonalRightVictory = true;
 
-                                    break;
-                                }
-                            }
+                        for (int i = 1; i < victoryLength; i++) {
+                            if (Board.Grid[row, column] != Board.Grid[row + i, column + i]) {
+                                isDiagonalRightVictory = false;
 
-                            if (isVictory) {
-                                return Board.Grid[row, column];
+                                break;
                             }
                         }
 
-                        // Diagonal (direita)
-                        if (row - victoryLength + 1 >= 0 && column + victoryLength <= Board.Columns) {
-                            bool isVictory = true;
+                        if (isDiagonalRightVictory) {
+                            return Board.Grid[row, column];
+                        }
+                    }
 
-                            for (var i = 1; i < victoryLength; i++) {
-                                if (Board.Grid[row, column] != Board.Grid[row - i, column + i]) {
-                                    isVictory = false;
+                    // Diagonal (esquerda)
+                    if (column >= victoryLength - 1 && row <= Board.Rows - victoryLength) {
+                        bool isDiagonalLeftVictory = true;
 
-                                    break;
-                                }
-                            }
+                        for (int i = 1; i < victoryLength; i++) {
+                            if (Board.Grid[row, column] != Board.Grid[row + i, column - i]) {
+                                isDiagonalLeftVictory = false;
 
-                            if (isVictory) {
-                                return Board.Grid[row, column];
+                                break;
                             }
                         }
 
-                        // Diagonal (esquerda)
-                        if (row - victoryLength + 1 >= 0 && column - victoryLength + 1 >= 0) {
-                            bool isVictory = true;
-
-                            for (var i = 1; i < victoryLength; i++) {
-                                if (Board.Grid[row, column] != Board.Grid[row - i, column - i]) {
-                                    isVictory = false;
-
-                                    break;
-                                }
-                            }
-
-                            if (isVictory) {
-                                return Board.Grid[row, column];
-                            }
+                        if (isDiagonalLeftVictory) {
+                            return Board.Grid[row, column];
                         }
                     }
                 }
             }
 
-            for (var row = 0; row < Board.Rows; row++) {
-                for (var column = 0; column < Board.Columns; column++) {
+            // Se não estiver empatado, o jogo continua
+            for (int row = 0; row < Board.Rows; row++) {
+                for (int column = 0; column < Board.Columns; column++) {
                     if (Board.Grid[row, column] == null) {
                         return null;
                     }
                 }
             }
 
+            // Empate
             return new Player("draw", "");
         }
-        
+
         public void GameDetails()
         {
             if (!IsGameOnGoing)
@@ -330,9 +383,9 @@ namespace n_in_row.src.Models {
         
         public void Forfeit() 
         {
-            if (!IsGameOnGoing) {
-                Console.WriteLine("\nNão está a decorrer nenhum jogo. Utilize 'ij' para iniciar um.");
+            Console.Write($"\n'{CurrentPlayer.Name}', tem a certeza que quer desistir do jogo? [s/n]: ");
 
+            if (!((Console.ReadLine() ?? "") == "s")) {
                 return;
             }
 
@@ -343,6 +396,7 @@ namespace n_in_row.src.Models {
             otherPlayer.SetStatistics(StatisticType.Victory);
 
             IsGameOnGoing = false;
+            Players.ToList().ForEach(player => player.SpecialPieces.Clear());
 
             Console.WriteLine($"\n'{CurrentPlayer.Name}' desistiu do jogo! Jogo terminado e '{otherPlayer.Name}' venceu a partida.");
         }

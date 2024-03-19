@@ -15,12 +15,20 @@ namespace n_in_row.src.Models {
             Quantity += quantity;
         }
 
+        public void DecreaseQuantity() {
+            Quantity--;
+        }
+
+        public bool IsSoldOut() {
+            return Quantity == 0;
+        }
+
         public string TranslatedDirection() {
             return directionTranslations[Direction];
         }
 
         public override string ToString() {
-            return $"{(Quantity > 0 ? Quantity : "« ESGOTADO »")}x [{TranslatedDirection()}] - Tamanho: {Length}";
+            return $"{(Quantity > 0 ? $"{Quantity}x" : "« ESGOTADO »")} [{TranslatedDirection()}] - Tamanho: {Length}";
         }
 
         private Dictionary<SpecialPieceDirection, string> directionTranslations = new() {

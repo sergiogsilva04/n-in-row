@@ -48,6 +48,10 @@
             SpecialPieces.Add(specialPiece);
         }
 
+        public bool HasSpecialPiecesAvailable() {
+            return SpecialPieces.Any((specialPiece) => !specialPiece.IsSoldOut());
+        }
+
         public override string ToString() {
             return $"[{Symbol}] '{Name}'";
         }
